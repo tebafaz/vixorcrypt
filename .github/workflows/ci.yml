@@ -12,4 +12,4 @@ jobs:
         npm install eslint@8.10.0
         npx eslint . \
           --config .eslintrc.json \
-          --ext .ts
+          --ext .ts .tsx
