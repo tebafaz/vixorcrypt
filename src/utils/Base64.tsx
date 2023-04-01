@@ -12,5 +12,5 @@ export const fileToBase64 = (file: File | Blob): Promise<string> =>
 });
 
 export const base64ToFile = (base64: string) => {
-  
+  return base64
 }
