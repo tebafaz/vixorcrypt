@@ -2,7 +2,6 @@
   "name": "vixorcrypt",
   "version": "0.0.0",
   "description": "visual xor based tool",
-  "main": "src/index.tsx",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
@@ -64,7 +63,6 @@
   "bugs": {
     "url": "https://github.com/tebafaz/vixorcrypt/issues"
   },
-  "homepage": "https://github.com/tebafaz/vixorcrypt#readme",
   "browserslist": {
     "production": [
       ">0.2%",

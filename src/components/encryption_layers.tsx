@@ -1,8 +1,8 @@
-import React from 'react';
-import PlusPng from '../images/plus-symbol-button.png';
-import MinusPng from '../images/minus.png';
-import { LayerAttr } from '../models/layer';
-
+import React from 'react'
+import PlusPng from '../images/plus-symbol-button.png'
+import MinusPng from '../images/minus.png'
+import { LayerAttr } from '../models/layer'
+import * as id from '../constants/id'
 
 type LayerProps = {
     layerAttrs: LayerAttr[],
@@ -59,10 +59,10 @@ const EncryptionLayers: React.FC<LayerProps> = ({layerAttrs, setLayerAttrs, isEn
 
     return (
     <>
-        <div className='hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black' id='encryption-layers-modal' onClick={onModalClick}>
+        <div className='hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black' id={id.encryptionLayersModal} onClick={onModalClick}>
             <div className='absolute bg-stone-300 inset-0 m-auto p-8 border border-solid w-96 h-40 text-center'>
                 <span>Write the number of encryption layers</span>
-                <input type="number" max={1000} min={2} defaultValue={2} pattern={'d'} className='invalid:bg-red-200 m-2' id='layer-count'></input><br />
+                <input type="number" max={1000} min={2} defaultValue={2} pattern={'d'} className='invalid:bg-red-200 m-2' id={id.layerCount}></input><br />
                 <span className='text-xs text-red-900'>min=2 max=1000</span><br />
                 <button className='hover:bg-stone-100 p-1' onClick={onButtonClick}>Enter</button>
             </div>
@@ -79,7 +79,7 @@ const EncryptionLayers: React.FC<LayerProps> = ({layerAttrs, setLayerAttrs, isEn
                     <div className='ml-1 grid grid-cols-10 place-content-start gap-1'>
                         {layerAttrs.map((value) => {
                             return (
-                                <div className=" my-1 text-center bg-stone-50 hover:cursor-pointer" onClick={onSelect} key={value.id}>
+                                <div className="my-1 text-center bg-stone-50 hover:cursor-pointer" onClick={onSelect} key={value.id}>
                                 {value.id}
                             </div>
                             )}) 

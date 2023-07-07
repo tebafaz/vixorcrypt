@@ -2,6 +2,7 @@ import React from 'react';
 import PlusPng from '../images/plus-symbol-button.png';
 import MinusPng from '../images/minus.png';
 import { ImgAttr } from '../models/image';
+import * as id from '../constants/id'
 
 type ImagesProps = {
   importImages: (e: React.MouseEvent) => void

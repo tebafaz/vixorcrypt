@@ -7,25 +7,29 @@ import BWNSelPng from '../images/radio_bw_ns.png';
 import BWSelPng from '../images/radio_bw_s.png';
 import ClrNSelPng from '../images/radio_clr_ns.png';
 import ClrSelPng from '../images/radio_clr_s.png';
+import LockPng from '../images/lock-icon.png';
+import UnlockPng from '../images/unlocked-icon.png'
+import EncToDec from '../images/enctodec.png'
+import DecToEnc from '../images/dectoenc.png'
+import * as ea from '../constants/ea'
 
 type TopBarProps = {
     importImages: (e: React.MouseEvent) => void
     setColoredMode :React.Dispatch<React.SetStateAction<boolean>>
+    colorMode: boolean
 }
 
-const TopBar: React.FC<TopBarProps> = ({importImages, setColoredMode}) => {
+const TopBar: React.FC<TopBarProps> = ({importImages, setColoredMode, colorMode}) => {
     const changeMode = (e: React.MouseEvent<HTMLImageElement>) => {
-        const clrImg = document.getElementsByTagName('img').namedItem('clr-mode');
-        const bwImg = document.getElementsByTagName('img').namedItem('bw-mode');
-        if(e.currentTarget.src == window.location.origin + ClrNSelPng) {
-            clrImg!.src = ClrSelPng
-            bwImg!.src = BWNSelPng
-            setColoredMode(true); 
-        }
-        if(e.currentTarget.src == window.location.origin + BWNSelPng) {
-            clrImg!.src = ClrNSelPng
-            bwImg!.src = BWSelPng
+        const modeImg = document.getElementsByTagName('img').namedItem('mode');
+        console.table(e.currentTarget.src + "\n\n\n\n\n" +  DecToEnc + "\n\n\n\n\n" + EncToDec)
+        if(colorMode) {
+            modeImg!.src = DecToEnc
             setColoredMode(false); 
+        }
+        if(!colorMode) {
+            modeImg!.src = EncToDec
+            setColoredMode(true); 
         }
     }
     return (
@@ -49,16 +53,21 @@ const TopBar: React.FC<TopBarProps> = ({importImages, setColoredMode}) => {
             </div>
             <div className='float-right h-full grid content-center mr-7'>
               <select className='inline-block' name="image-processing-method" id="image-processing-method">
-                <option value="volvo">Encryption</option>
-                <option value="saab">Decryption</option>
+                {Object.entries(ea.encryption_algorithms).map(([key, value]) => (
+                  <option title={ea.encryption_algorithms[key]}>{key}</option>
+                ))}
               </select>
               </div>
             <div className='float-right h-full mr-7'>
-              <button className='px h-full' title='colored mode'>
+              {/*<button className='px h-full' title='colored mode'>
                 <img className='mode-button' width={32} height={32} src={ClrSelPng} alt="colored mode" onMouseDown={changeMode} id='clr-mode'/>
               </button>
               <button className='px h-full' title='black and white mode'>
                 <img className='mode-button' width={32} height={32} src={BWNSelPng} alt="black and white mode" onMouseDown={changeMode} id='bw-mode'/>
+                </button>*/}
+                
+              <button className='px h-full' title='colored mode'>
+                <img className='mode-button' width={85} height={32} src={EncToDec} alt="encryption mode" onMouseDown={changeMode} id='mode' title='encryption mode'/>
               </button>
             </div>
           </div>
