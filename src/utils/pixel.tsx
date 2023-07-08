@@ -1,1 +1,1 @@
-export const pixel = () => {}
+export const pixel = (): void => {}

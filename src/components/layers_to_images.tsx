@@ -1,17 +1,17 @@
-import React from 'react';
+import React from 'react'
 // import PlusPng from '../images/plus-symbol-button.png';
 // import MinusPng from '../images/minus.png';
 
-type LayersToImagesProps = {
+interface LayersToImagesProps {
   isEncrypting: boolean
   setIsEncrypting: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const LayersToImages: React.FC<LayersToImagesProps> = ({isEncrypting, setIsEncrypting}) => {
-  const onPlusClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setIsEncrypting(true)
-  }
-    return <>
+const LayersToImages: React.FC<LayersToImagesProps> = ({ isEncrypting, setIsEncrypting }) => {
+  // const onPlusClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   setIsEncrypting(true)
+  // }
+  return <>
         {/* start Layers to Images */}
         <div className='flex flex-col h-1/3'>
                 <span className='flex-none pl-2 hover:pointer-events-none'>
@@ -21,7 +21,7 @@ const LayersToImages: React.FC<LayersToImagesProps> = ({isEncrypting, setIsEncry
                   {/* start inner overflow item */}
                   <div className="relative w-full h-full bg-stone-200">
                     <div className='absolute inset-0 overflow-auto'>
-                      
+
                     </div>
                   </div>
                   {/* end inner overflow item */}

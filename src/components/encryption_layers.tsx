@@ -1,63 +1,65 @@
 import React from 'react'
 // import PlusPng from '../images/plus-symbol-button.png'
 // import MinusPng from '../images/minus.png'
-import { LayerAttr } from '../models/layer'
+import { type LayerAttr } from '../models/layer'
 import * as id from '../constants/id'
 
-type LayerProps = {
-    layerAttrs: LayerAttr[],
-    setLayerAttrs: React.Dispatch<React.SetStateAction<LayerAttr[]>>
-    isEncrypting: boolean
+interface LayerProps {
+  layerAttrs: LayerAttr[]
+  setLayerAttrs: React.Dispatch<React.SetStateAction<LayerAttr[]>>
+  isEncrypting: boolean
 }
 
-const EncryptionLayers: React.FC<LayerProps> = ({layerAttrs, setLayerAttrs, isEncrypting}) => {
-    const onPlusClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const modal = document.getElementsByTagName('div').namedItem('encryption-layers-modal')
-        modal!.style.display = "block"
+const EncryptionLayers: React.FC<LayerProps> = ({ layerAttrs, setLayerAttrs, isEncrypting }) => {
+  // const onPlusClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   const modal = document.getElementsByTagName('div').namedItem('encryption-layers-modal')
+  //   modal!.style.display = 'block'
+  // }
+  const onModalClick = (e: React.MouseEvent<HTMLDivElement>): void => {
+    const modal = document.getElementsByTagName('div').namedItem('encryption-layers-modal')
+    if (e.target === modal) {
+      modal.style.display = 'none'
     }
-    const onModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        const modal = document.getElementsByTagName('div').namedItem('encryption-layers-modal')
-        if (e.target === modal) {
-            modal!.style.display = "none"
-        }
+  }
+  const onButtonClick = (e: React.MouseEvent): void => {
+    const layerInput = document.getElementsByTagName('input').namedItem('layer-count')
+    if (layerInput == null || layerInput.validity.badInput) {
+      return
     }
-    const onButtonClick = (e: React.MouseEvent) => {
-        const layerInput = document.getElementsByTagName('input').namedItem('layer-count')
-        console.table(layerInput?.validity)
-        if (layerInput?.validity.badInput) {
-            return
-        }
-        const modal = document.getElementsByTagName('div').namedItem('encryption-layers-modal')
-        modal!.style.display = "none"
+    const modal = document.getElementsByTagName('div').namedItem('encryption-layers-modal')
+    if (modal == null) {
+      return
+    }
+    modal.style.display = 'none'
 
-        const layerCount = parseInt(layerInput!.value)
-        let layerAttrs: LayerAttr[] = []
-        for (let i = 0; i < layerCount; i++) {
-            const layerAttr: LayerAttr = {
-                id: i,
-                isSelected: false, 
-                isSharedKey: false, 
-                isStrictRandom: false, 
-                isStrictGenerated: false
-            }
-            layerAttrs = [...layerAttrs, layerAttr]
-        }
-        setLayerAttrs(layerAttrs)
+    const layerCount = parseInt(layerInput.value)
+    let layerAttrs: LayerAttr[] = []
+    for (let i = 0; i < layerCount; i++) {
+      const layerAttr: LayerAttr = {
+        id: i,
+        isSelected: false,
+        isSharedKey: false,
+        isStrictRandom: false,
+        isStrictGenerated: false
+      }
+      layerAttrs = [...layerAttrs, layerAttr]
     }
+    setLayerAttrs(layerAttrs)
+  }
 
-    const onSelect = (e: React.MouseEvent<HTMLDivElement>) => {
-        if(isEncrypting) {
-            
-        }
-        
-        if(e.currentTarget.style.outline === '') {
-            e.currentTarget.style.outline = 'solid 1px blue'
-        } else {
-            e.currentTarget.style.outline = ''
-        }
+  const onSelect = (e: React.MouseEvent<HTMLDivElement>): void => {
+    if (isEncrypting) {
+      console.log(isEncrypting)
     }
 
-    return (
+    if (e.currentTarget.style.outline === '') {
+      e.currentTarget.style.outline = 'solid 1px blue'
+    } else {
+      e.currentTarget.style.outline = ''
+    }
+  }
+
+  return (
     <>
         <div className='hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black' id={id.encryptionLayersModal} onClick={onModalClick}>
             <div className='absolute bg-stone-300 inset-0 m-auto p-8 border border-solid w-96 h-40 text-center'>
@@ -78,11 +80,12 @@ const EncryptionLayers: React.FC<LayerProps> = ({layerAttrs, setLayerAttrs, isEn
                 <div className='absolute inset-0 overflow-auto'>
                     <div className='ml-1 grid grid-cols-10 place-content-start gap-1'>
                         {layerAttrs.map((value) => {
-                            return (
+                          return (
                                 <div className="my-1 text-center bg-stone-50 hover:cursor-pointer" onClick={onSelect} key={value.id}>
                                 {value.id}
                             </div>
-                            )}) 
+                          )
+                        })
                         }
                     </div>
                 </div>
@@ -100,7 +103,7 @@ const EncryptionLayers: React.FC<LayerProps> = ({layerAttrs, setLayerAttrs, isEn
         </div>
       {/* end Layers */}
     </>
-    )
+  )
 }
 
 export default EncryptionLayers

@@ -1,28 +1,27 @@
-import React from 'react';
+import React from 'react'
 // import PlusPng from '../images/plus-symbol-button.png';
 // import MinusPng from '../images/minus.png';
-import { ImgAttr } from '../models/image';
+import { type ImgAttr } from '../models/image'
 // import * as id from '../constants/id'
 
-type ImagesProps = {
+interface ImagesProps {
   importImages: (e: React.MouseEvent) => void
   images: ImgAttr[]
   isEncrypting: boolean
 }
 
-const Images: React.FC<ImagesProps> = ({importImages, images, isEncrypting}) => {
-    const onSelect = (e: React.MouseEvent<HTMLDivElement>) => {
-      if(isEncrypting) {
-        e.currentTarget.classList.toggle('bg-cyan-300')
-      } else {
-        e.currentTarget.classList.toggle('outline')
-        e.currentTarget.classList.toggle('outline-1')
-        e.currentTarget.classList.toggle('outline-cyan-500')
-      }
-      
+const Images: React.FC<ImagesProps> = ({ importImages, images, isEncrypting }) => {
+  const onSelect = (e: React.MouseEvent<HTMLDivElement>): void => {
+    if (isEncrypting) {
+      e.currentTarget.classList.toggle('bg-cyan-300')
+    } else {
+      e.currentTarget.classList.toggle('outline')
+      e.currentTarget.classList.toggle('outline-1')
+      e.currentTarget.classList.toggle('outline-cyan-500')
     }
+  }
 
-    return    <>
+  return <>
               <div className='flex flex-col h-1/3 border-y-2 border-stone-900'>
               <span className='flex-none pl-2 hover:pointer-events-none'>
                   Images

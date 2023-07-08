@@ -13,26 +13,26 @@ import React from 'react'
 // import DecToEnc from '../images/dectoenc.png'
 import * as ea from '../constants/ea'
 
-type TopBarProps = {
-    importImages: (e: React.MouseEvent) => void
-    setColoredMode :React.Dispatch<React.SetStateAction<boolean>>
-    colorMode: boolean
+interface TopBarProps {
+  importImages: (e: React.MouseEvent) => void
+  setColoredMode: React.Dispatch<React.SetStateAction<boolean>>
+  colorMode: boolean
 }
 
-const TopBar: React.FC<TopBarProps> = ({importImages, setColoredMode, colorMode}) => {
-    const changeMode = (e: React.MouseEvent<HTMLImageElement>) => {
-        // const modeImg = document.getElementsByTagName('img').namedItem('mode');
-        // console.table(e.currentTarget.src + "\n\n\n\n\n" +  DecToEnc + "\n\n\n\n\n" + EncToDec)
-        // if(colorMode) {
-        //     modeImg!.src = DecToEnc
-        //     setColoredMode(false); 
-        // }
-        // if(!colorMode) {
-        //     modeImg!.src = EncToDec
-        //     setColoredMode(true); 
-        // }
-    }
-    return (
+const TopBar: React.FC<TopBarProps> = ({ importImages, setColoredMode, colorMode }) => {
+  // const changeMode = (e: React.MouseEvent<HTMLImageElement>) => {
+  // const modeImg = document.getElementsByTagName('img').namedItem('mode');
+  // console.table(e.currentTarget.src + "\n\n\n\n\n" +  DecToEnc + "\n\n\n\n\n" + EncToDec)
+  // if(colorMode) {
+  //     modeImg!.src = DecToEnc
+  //     setColoredMode(false);
+  // }
+  // if(!colorMode) {
+  //     modeImg!.src = EncToDec
+  //     setColoredMode(true);
+  // }
+  // }
+  return (
         <>
         {/* start top menu panel */}
         <div className='flex h-10 bg-stone-300'>
@@ -53,19 +53,19 @@ const TopBar: React.FC<TopBarProps> = ({importImages, setColoredMode, colorMode}
             </div> */}
             <div className='float-right h-full grid content-center mr-7'>
               <select className='inline-block' name="image-processing-method" id="image-processing-method">
-                {Object.entries(ea.encryption_algorithms).map(([key, value]) => (
-                  <option title={ea.encryption_algorithms[key]}>{key}</option>
+                {Object.entries(ea.encryptionAlgorithms).map(([key, value]) => (
+                  <option key={key} title={value}>{key}</option>
                 ))}
               </select>
               </div>
             <div className='float-right h-full mr-7'>
-              {/*<button className='px h-full' title='colored mode'>
+              {/* <button className='px h-full' title='colored mode'>
                 <img className='mode-button' width={32} height={32} src={ClrSelPng} alt="colored mode" onMouseDown={changeMode} id='clr-mode'/>
               </button>
               <button className='px h-full' title='black and white mode'>
                 <img className='mode-button' width={32} height={32} src={BWNSelPng} alt="black and white mode" onMouseDown={changeMode} id='bw-mode'/>
-                </button>*/}
-                
+                </button> */}
+
               {/* <button className='px h-full' title='colored mode'>
                 <img className='mode-button' width={85} height={32} src={EncToDec} alt="encryption mode" onMouseDown={changeMode} id='mode' title='encryption mode'/>
               </button> */}
@@ -74,7 +74,7 @@ const TopBar: React.FC<TopBarProps> = ({importImages, setColoredMode, colorMode}
         </div>
         {/* end top menu panel */}
         </>
-    )
+  )
 }
 
 export default TopBar

@@ -3,7 +3,7 @@ import sha1 from 'crypto-js/sha1'
 import './css/style.css'
 import type { ImgAttr } from './models/image'
 import Images from './components/images'
-import {  getHeightWidth, getMaxWH, imageExists, isOverflown  } from './utils/image'
+import { getHeightWidth, getMaxWH, imageExists, isOverflown } from './utils/image'
 import EncryptionLayers from './components/encryption_layers'
 import LayersToImages from './components/layers_to_images'
 import type { LayerAttr } from './models/layer'
@@ -11,7 +11,7 @@ import { fillBgRandPxl } from './utils/canvas'
 import TopBar from './components/top_bar'
 import * as id from './constants/id'
 
-const App: React.FC = () => { 
+const App: React.FC = () => {
   const [ctrlPressed, setCtrlPressed] = useState(false)
 
   const [coloredMode, setColoredMode] = useState(true)
@@ -27,13 +27,13 @@ const App: React.FC = () => {
 
   const [images, setImages] = useState<ImgAttr[]>([])
 
-  useEffect(() => { 
+  useEffect(() => {
     document.addEventListener('keydown', (e) => { if (e.ctrlKey) { setCtrlPressed(true) } })
     document.addEventListener('keyup', () => { setCtrlPressed(false) })
-    window.addEventListener('wheel', (e) => { if (e.ctrlKey){ e.preventDefault() } }, { passive: false })
-   }, [])
+    window.addEventListener('wheel', (e) => { if (e.ctrlKey) { e.preventDefault() } }, { passive: false })
+  }, [])
 
-  useEffect(() => { 
+  useEffect(() => {
     const { maxH, maxW } = getMaxWH(images)
     const canvasHolder = document.getElementsByTagName('div').namedItem(id.canvasHolder1)
     if (canvasHolder == null) {
@@ -47,81 +47,98 @@ const App: React.FC = () => {
 
     canvas.height = maxH
     canvas.width = maxW
-    canvasHolder.style.height = `${ maxH }px`
-    canvasHolder.style.width = `${ maxW }px`
-  
+    canvasHolder.style.height = `${maxH}px`
+    canvasHolder.style.width = `${maxW}px`
+
     setCanvasW(maxW)
     setCanvasH(maxH)
     fillBgRandPxl(canvas, maxW, maxH)
-   }, [images])
+  }, [images])
 
-  const mouseOnWheelHandler = (e: React.WheelEvent<HTMLDivElement>) => { 
-    if (ctrlPressed) { 
+  const mouseOnWheelHandler = (e: React.WheelEvent<HTMLDivElement>): void => {
+    if (ctrlPressed) {
       const canvas = document.getElementsByTagName('canvas').namedItem(id.mainCanvas)
       let scale = canvasScale
-      if(e.deltaY < 1) { 
+      if (e.deltaY < 1) {
         scale += 0.1
-       } else { 
+      } else {
         scale -= 0.1
-       }
-      if (scale < 0.2) { 
+      }
+      if (scale < 0.2) {
         scale = 0.2
-       }
+      }
 
-      canvas!.style.scale = `${ scale }`
+      if (canvas == null) {
+        return
+      }
+      canvas.style.scale = `${scale}`
       setCanvasScale(scale)
       const canvasHolder = document.getElementsByTagName('div').namedItem(id.canvasHolder1)
-      const canvasStyle = getComputedStyle(canvas!)
+      const canvasStyle = getComputedStyle(canvas)
       const height = parseInt(canvasStyle.height.replaceAll('px', ''))
       const width = parseInt(canvasStyle.width.replaceAll('px', ''))
-      canvasHolder!.style.height = `${ scale * height }px`
-      canvasHolder!.style.width = `${ scale * width }px`
-      canvas!.style.imageRendering = 'pixelated'
+
+      if (canvasHolder == null) {
+        return
+      }
+      canvasHolder.style.height = `${scale * height}px`
+      canvasHolder.style.width = `${scale * width}px`
+      canvas.style.imageRendering = 'pixelated'
 
       const canvasHolder2 = document.getElementsByTagName('div').namedItem(id.canvasHolder2)
-      const canvasHolderStyle = getComputedStyle(canvasHolder!)
-      const canvasHolder2Style = getComputedStyle(canvasHolder2!)
+      const canvasHolderStyle = getComputedStyle(canvasHolder)
+      if (canvasHolder2 == null) {
+        return
+      }
+      const canvasHolder2Style = getComputedStyle(canvasHolder2)
 
-      if(isOverflown(canvasHolderStyle, canvasHolder2Style)) { 
-        canvas!.style.marginTop = `0px`
-        canvasHolder!.style.marginTop = `0px`
-       } else { 
-        canvas!.style.marginTop = `auto`
-        canvasHolder!.style.marginTop = `auto`
-       }
-     }
-   }
+      if (isOverflown(canvasHolderStyle, canvasHolder2Style)) {
+        canvas.style.marginTop = '0px'
+        canvasHolder.style.marginTop = '0px'
+      } else {
+        canvas.style.marginTop = 'auto'
+        canvasHolder.style.marginTop = 'auto'
+      }
+    }
+  }
 
-  const importImages = (e: React.MouseEvent) => { 
+  const importImages = (e: React.MouseEvent): void => {
     const input = document.getElementsByTagName('input').namedItem('image-input')
     input?.click()
-    
-   }
+  }
 
-  const setFileHandler = (e: React.ChangeEvent<HTMLInputElement>) => { 
-
-    for (let i = 0; i < e.target.files?.length!; i++) { 
+  const setFileHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (e.target.files == null) {
+      return
+    }
+    if (e.currentTarget.files == null) {
+      return
+    }
+    for (let i = 0; i < e.target.files.length; i++) {
       const reader = new FileReader()
-      const file = e!.currentTarget!.files!.item(i)
+      const file = e.currentTarget.files.item(i)
       reader.readAsDataURL(file as Blob)
-      reader.onload = async function() { 
-        const readerResultStr = (reader.result)!.toString()
+      reader.onload = async function () {
+        const readerResultStr = (reader.result as string).toString()
         const wh = await getHeightWidth(readerResultStr)
-        let image: ImgAttr = { 
+        if (file == null) {
+          return
+        }
+        const image: ImgAttr = {
           base64: readerResultStr,
           hash: sha1(readerResultStr).toString(),
-          filename: file!.name,
+          filename: file.name,
           width: wh.width,
           height: wh.height
-         }
-        if (imageExists(images, image.hash)) { 
+        }
+        if (imageExists(images, image.hash)) {
           console.log('image exist')
           return
-         }
+        }
         setImages(existing => [...existing, image])
-       }
-     }
-   }
+      }
+    }
+  }
 
   return (
     <>
@@ -162,6 +179,6 @@ const App: React.FC = () => {
       </div>
     </>
   )
- }
+}
 
 export default App
