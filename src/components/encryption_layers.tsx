@@ -1,6 +1,6 @@
 import React from 'react'
-import PlusPng from '../images/plus-symbol-button.png'
-import MinusPng from '../images/minus.png'
+// import PlusPng from '../images/plus-symbol-button.png'
+// import MinusPng from '../images/minus.png'
 import { LayerAttr } from '../models/layer'
 import * as id from '../constants/id'
 
@@ -90,12 +90,12 @@ const EncryptionLayers: React.FC<LayerProps> = ({layerAttrs, setLayerAttrs, isEn
             {/* end inner overflow item */}
             </div>
             <div className='flex-none h-7'>
-            <button className='h-full w-7 hover:bg-stone-100 px-2' title='add new layer' onClick={onPlusClick}>
+            {/* <button className='h-full w-7 hover:bg-stone-100 px-2' title='add new layer' onClick={onPlusClick}>
                 <img width={20} height={20} src={PlusPng} alt="add new layer" />
             </button>
             <button className='h-full w-7 hover:bg-stone-100 px-2' title='remove layer'>
                 <img width={20} height={20} src={MinusPng} alt="remove layer" />
-            </button>
+            </button> */}
           </div>
         </div>
       {/* end Layers */}

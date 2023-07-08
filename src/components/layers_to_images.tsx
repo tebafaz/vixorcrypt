@@ -1,6 +1,6 @@
 import React from 'react';
-import PlusPng from '../images/plus-symbol-button.png';
-import MinusPng from '../images/minus.png';
+// import PlusPng from '../images/plus-symbol-button.png';
+// import MinusPng from '../images/minus.png';
 
 type LayersToImagesProps = {
   isEncrypting: boolean
@@ -27,12 +27,12 @@ const LayersToImages: React.FC<LayersToImagesProps> = ({isEncrypting, setIsEncry
                   {/* end inner overflow item */}
                 </div>
                 <div className='flex-none h-7'>
-                  <button className='h-full w-7 hover:bg-stone-100 px-2' title='add new encrypted set' onClick={onPlusClick}>
+                  {/* <button className='h-full w-7 hover:bg-stone-100 px-2' title='add new encrypted set' onClick={onPlusClick}>
                     <img width={20} height={20} src={PlusPng} alt="add new encrypted set" />
                   </button>
                   <button className='h-full w-7 hover:bg-stone-100 px-2' title='remove encrypted set'>
                     <img width={20} height={20} src={MinusPng} alt="remove encrypted set" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
               {/* end Layers to Images */}

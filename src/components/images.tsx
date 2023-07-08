@@ -1,8 +1,8 @@
 import React from 'react';
-import PlusPng from '../images/plus-symbol-button.png';
-import MinusPng from '../images/minus.png';
+// import PlusPng from '../images/plus-symbol-button.png';
+// import MinusPng from '../images/minus.png';
 import { ImgAttr } from '../models/image';
-import * as id from '../constants/id'
+// import * as id from '../constants/id'
 
 type ImagesProps = {
   importImages: (e: React.MouseEvent) => void
@@ -50,12 +50,12 @@ const Images: React.FC<ImagesProps> = ({importImages, images, isEncrypting}) => 
                   </div>
                 </div>
                 <div className='flex-none h-7'>
-                  <button className='h-full w-7 hover:bg-stone-100 px-2'  type="button" onClick={importImages} title='add images'>
+                  {/* <button className='h-full w-7 hover:bg-stone-100 px-2'  type="button" onClick={importImages} title='add images'>
                     <img width={20} height={20} src={PlusPng} alt="add images" />
                   </button>
                   <button className='h-full w-7 hover:bg-stone-100 px-2' title='remove image'>
                     <img width={20} height={20} src={MinusPng} alt="remove images" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
               </>
