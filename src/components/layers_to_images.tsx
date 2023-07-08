@@ -13,13 +13,13 @@ const LayersToImages: React.FC<LayersToImagesProps> = ({ isEncrypting, setIsEncr
   // }
   return <>
         {/* start Layers to Images */}
-        <div className='flex flex-col h-1/3'>
-                <span className='flex-none pl-2 hover:pointer-events-none'>
+        <div className='flex flex-col h-1/3 bg-blueGray-light'>
+                <span className='flex-none pl-2 hover:pointer-events-none text-white'>
                   Encryption layers {'\u21E2'} images
                 </span>
                 <div className='flex-auto'>
                   {/* start inner overflow item */}
-                  <div className="relative w-full h-full bg-stone-200">
+                  <div className="relative w-full h-full bg-blueGray-medium-light">
                     <div className='absolute inset-0 overflow-auto'>
 
                     </div>

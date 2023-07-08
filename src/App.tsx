@@ -149,7 +149,7 @@ const App: React.FC = () => {
         <div className='flex-auto'>
           <div className='w-full h-full flex flex-row'>
             { /* start main canvas panel */ }
-            <div className='flex-1 bg-stone-100 border-t-2 border-r-2 border-stone-900'>
+            <div className='flex-1 bg-blueGray-medium-dark border-t-2 border-r-2 border-stone-900'>
               <div className='flex flex-col h-full'>
                 <div className='flex flex-row h-full w-full'>
                   <div className='flex-auto relative overflow-scroll' id={id.canvasHolder2} onWheel={ mouseOnWheelHandler }>
@@ -160,8 +160,8 @@ const App: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className='flex-none h-7 bg-stone-300 font-light text-sm'>
-                  <span className='pl-2 text-sm'>Canvas size: { canvasW }x{ canvasH }</span>
+                <div className='flex-none h-7 bg-blueGray-light font-light text-sm'>
+                  <span className='pl-2 text-sm text-white'>Canvas size: { canvasW }x{ canvasH }</span>
                 </div>
               </div>
             </div>
