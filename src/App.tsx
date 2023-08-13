@@ -9,12 +9,13 @@ import LayersToImages from './components/layers_to_images'
 import type { LayerAttr } from './models/layer'
 import { fillBgRandPxl } from './utils/canvas'
 import TopBar from './components/top_bar'
-import * as id from './constants/id'
+import * as id from './constants/ids'
+import { MenuBar } from './menubar/jdmenubar'
+import './constants/menubar'
+import { menuItems } from './constants/menubar'
 
 const App: React.FC = () => {
   const [ctrlPressed, setCtrlPressed] = useState(false)
-
-  const [coloredMode, setColoredMode] = useState(true)
 
   const [canvasScale, setCanvasScale] = useState(1)
 
@@ -27,33 +28,41 @@ const App: React.FC = () => {
 
   const [images, setImages] = useState<ImgAttr[]>([])
 
-  useEffect(() => {
-    document.addEventListener('keydown', (e) => { if (e.ctrlKey) { setCtrlPressed(true) } })
-    document.addEventListener('keyup', () => { setCtrlPressed(false) })
-    window.addEventListener('wheel', (e) => { if (e.ctrlKey) { e.preventDefault() } }, { passive: false })
-  }, [])
+  // useEffect(() => {
+  //   document.addEventListener('keydown', (e) => { if (e.ctrlKey) { setCtrlPressed(true) } })
+  //   document.addEventListener('keyup', () => { setCtrlPressed(false) })
+  //   window.addEventListener('wheel', (e) => { if (e.ctrlKey) { e.preventDefault() } }, { passive: false })
+  // }, [])
 
-  useEffect(() => {
-    const { maxH, maxW } = getMaxWH(images)
-    const canvasHolder = document.getElementsByTagName('div').namedItem(id.canvasHolder1)
-    if (canvasHolder == null) {
-      console.error(`${id.canvasHolder1} is null`)
+  // useEffect(() => {
+  //   const { maxH, maxW } = getMaxWH(images)
+  //   const canvasHolder = document.getElementsByTagName('div').namedItem(id.canvasHolder1)
+  //   if (canvasHolder == null) {
+  //     console.error(`${id.canvasHolder1} is null`)
+  //     return
+  //   }
+  //   const canvas = document.getElementsByTagName('canvas').namedItem(id.mainCanvas)
+  //   if (canvas == null) {
+  //     return
+  //   }
+
+  //   canvas.height = maxH
+  //   canvas.width = maxW
+  //   canvasHolder.style.height = `${maxH}px`
+  //   canvasHolder.style.width = `${maxW}px`
+
+  //   setCanvasW(maxW)
+  //   setCanvasH(maxH)
+  //   fillBgRandPxl(canvas, maxW, maxH)
+  // }, [images])
+  
+  window.onload = () => {
+    const menuBar = document.getElementById('menu-bar')
+    if (menuBar == null) {
       return
     }
-    const canvas = document.getElementsByTagName('canvas').namedItem(id.mainCanvas)
-    if (canvas == null) {
-      return
-    }
-
-    canvas.height = maxH
-    canvas.width = maxW
-    canvasHolder.style.height = `${maxH}px`
-    canvasHolder.style.width = `${maxW}px`
-
-    setCanvasW(maxW)
-    setCanvasH(maxH)
-    fillBgRandPxl(canvas, maxW, maxH)
-  }, [images])
+    const menubar = new MenuBar(menuBar, menuItems)
+  }
 
   const mouseOnWheelHandler = (e: React.WheelEvent<HTMLDivElement>): void => {
     if (ctrlPressed) {
@@ -144,7 +153,7 @@ const App: React.FC = () => {
     <>
     <input multiple type='file' hidden accept='image/*' id={ id.imageInput } onChange={ setFileHandler }/>
       <div className='w-full h-screen flex flex-col'>
-        <TopBar importImages={ importImages } setColoredMode={ setColoredMode } colorMode= { coloredMode }></TopBar>
+        <TopBar/>
         { /* start workspace */ }
         <div className='flex-auto'>
           <div className='w-full h-full flex flex-row'>
@@ -161,7 +170,7 @@ const App: React.FC = () => {
                   </div>
                 </div>
                 <div className='flex-none h-7 bg-blueGray-light font-light text-sm'>
-                  <span className='pl-2 text-sm text-white'>Canvas size: { canvasW }x{ canvasH }</span>
+                  <span className='pl-2 text-sm text-white'>Algorithm: { 'xor-c' } Mode: { 'Generate' } Canvas size: { canvasW }x{ canvasH }</span>
                 </div>
               </div>
             </div>

@@ -599,10 +599,6 @@ video {
   z-index: 10;
 }
 
-.float-right {
-  float: right;
-}
-
 .m-2 {
   margin: 0.5rem;
 }
@@ -624,24 +620,12 @@ video {
   margin-left: 0.5rem;
 }
 
-.mr-7 {
-  margin-right: 1.75rem;
-}
-
 .block {
   display: block;
 }
 
-.inline-block {
-  display: inline-block;
-}
-
 .flex {
   display: flex;
-}
-
-.flow-root {
-  display: flow-root;
 }
 
 .grid {
@@ -930,6 +914,17 @@ video {
 
 .outline-stone-900 {
   outline-color: #1c1917;
+}
+
+:root {
+  --jdmenu-bg-color: rgb(74,74,86);
+  --jdmenu-border-color: rgb(0,0,0);
+  --jdmenu-focus-color: rgb(65,65,77);
+  --jdmenu-shortcut-color:;
+  /* Also for disabled items */
+  --jdmenu-font-size: 15px;
+  --jdmenu-font-family: Helvetica;
+  --jdmenu-font-color: rgb(255,255,255);
 }
 
 .invalid\:bg-red-200:invalid {
