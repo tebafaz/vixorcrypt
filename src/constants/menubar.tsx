@@ -1,6 +1,6 @@
 export const menuItems = [
     { text : "File", subMenuItems : [
-        { text : "New canvas"},
+        { text : "New project" },
         { text : "Export as" },
     ]}, 
     { id : "edit", text : "Edit", subMenuItems : [
@@ -10,14 +10,15 @@ export const menuItems = [
         { text : "Algorithms", subMenuItems : [
             { text : "xor-c" },
         ]},
-        { text : "Shares", subMenuItems: [
+        { text : "Cryptography operations", subMenuItems: [
             { text : "Generate shares"},
+            { text : "Merge shares"},
         ]},
     ]}, 
     { text : "About", subMenuItems: [
         { text : "Help", subMenuItems: [
-            { text : "docs"},
+            { text : "docs" },
         ]},
-        { text : "Github page"},
+        { text : "Github page" },
     ]}
 ]

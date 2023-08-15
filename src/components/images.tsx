@@ -22,7 +22,7 @@ const Images: React.FC<ImagesProps> = ({ importImages, images, isEncrypting }) =
   }
 
   return <>
-              <div className='flex flex-col h-1/3 border-y-2 border-stone-900 bg-blueGray-light'>
+              <div className='flex flex-1 flex-col h-1/3 border-y-2 border-stone-900 bg-blueGray-light'>
               <span className='flex-none pl-2 hover:pointer-events-none text-white'>
                   Images
                 </span>
@@ -48,13 +48,19 @@ const Images: React.FC<ImagesProps> = ({ importImages, images, isEncrypting }) =
                     </div>
                   </div>
                 </div>
-                <div className='flex-none h-7'>
+                <div className='flex h-7 items-center'>
                   {/* <button className='h-full w-7 hover:bg-stone-100 px-2'  type="button" onClick={importImages} title='add images'>
                     <img width={20} height={20} src={PlusPng} alt="add images" />
                   </button>
                   <button className='h-full w-7 hover:bg-stone-100 px-2' title='remove image'>
                     <img width={20} height={20} src={MinusPng} alt="remove images" />
                   </button> */}
+                  <button className='mx-1 bg-transparent px-2 border border-l-white border-t-white border-r-black border-b-black active:border-l-black active:border-t-black active:border-r-white active:border-b-white'>
+                    <span className='text-white text-sm'>Add</span>
+                  </button>
+                  <button className=' mx-1 bg-transparent px-2 border border-l-white border-t-white border-r-black border-b-black active:border-l-black active:border-t-black active:border-r-white active:border-b-white'>
+                    <span className='text-white text-sm'>Remove</span>
+                  </button>
                 </div>
               </div>
               </>

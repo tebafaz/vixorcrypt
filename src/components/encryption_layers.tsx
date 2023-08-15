@@ -63,7 +63,7 @@ const EncryptionLayers: React.FC<LayerProps> = ({ layerAttrs, setLayerAttrs, isE
     <>
         <div className='hidden fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black' id={id.encryptionLayersModal} onClick={onModalClick}>
             <div className='absolute bg-stone-300 inset-0 m-auto p-8 border border-solid w-96 h-40 text-center'>
-                <span>Write the number of encryption layers</span>
+                <span>Write the number of shares</span>
                 <input type="number" max={1000} min={2} defaultValue={2} pattern={'d'} className='invalid:bg-red-200 m-2' id={id.layerCount}></input><br />
                 <span className='text-xs text-red-900'>min=2 max=1000</span><br />
                 <button className='hover:bg-stone-100 p-1' onClick={onButtonClick}>Enter</button>
@@ -72,7 +72,7 @@ const EncryptionLayers: React.FC<LayerProps> = ({ layerAttrs, setLayerAttrs, isE
         {/* start Layers */}
         <div className='flex flex-col h-1/3 bg-blueGray-light'>
             <span className='flex-none pl-2 hover:pointer-events-none text-white'>
-            Encryption layers
+            Shares
             </span>
             <div className='flex-auto'>
             {/* start inner overflow item */}
@@ -92,13 +92,19 @@ const EncryptionLayers: React.FC<LayerProps> = ({ layerAttrs, setLayerAttrs, isE
             </div>
             {/* end inner overflow item */}
             </div>
-            <div className='flex-none h-7'>
+            <div className='flex h-7 items-center'>
             {/* <button className='h-full w-7 hover:bg-stone-100 px-2' title='add new layer' onClick={onPlusClick}>
                 <img width={20} height={20} src={PlusPng} alt="add new layer" />
             </button>
             <button className='h-full w-7 hover:bg-stone-100 px-2' title='remove layer'>
                 <img width={20} height={20} src={MinusPng} alt="remove layer" />
             </button> */}
+            <button className='mx-1 bg-transparent px-2 border border-l-white border-t-white border-r-black border-b-black active:border-l-black active:border-t-black active:border-r-white active:border-b-white'>
+              <span className='text-white text-sm'>Add</span>
+            </button>
+            <button className=' mx-1 bg-transparent px-2 border border-l-white border-t-white border-r-black border-b-black active:border-l-black active:border-t-black active:border-r-white active:border-b-white'>
+              <span className='text-white text-sm'>Remove</span>
+            </button>
           </div>
         </div>
       {/* end Layers */}

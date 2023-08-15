@@ -176,10 +176,23 @@ const App: React.FC = () => {
             </div>
             { /* end main canvas panel */ }
             { /* start layers panel */ }
-            <div className='flex-none w-96 h-full bg-stone-300'>
+            
+            <div className='flex flex-col w-96 max-h-full h-full bg-stone-300'>
+              <div className='flex flex-row justify-evenly w-96 h-10 bg-blueGray-medium-dark'>
+                <button className='px-2 bottom-0 h-8 w-24 mb-0 bg-blueGray-light mt-auto'>
+                  <span className='text-white'>Select</span>
+                </button>
+                <button className='px-2 bottom-0 h-8 w-24 mb-0 bg-blueGray-medium-light mt-auto'>
+                  <span className='text-white'>Generate</span>
+                </button>
+              </div>
+              <div className='flex-auto'>
               <EncryptionLayers isEncrypting={ isEncrypting } layerAttrs={ layerAttrs } setLayerAttrs={ setLayerAttrs }></EncryptionLayers>
-              <Images isEncrypting={ isEncrypting } importImages={ importImages } images={ images }></Images>
-              <LayersToImages isEncrypting={ isEncrypting } setIsEncrypting={ setIsEncrypting }></LayersToImages>
+                <Images isEncrypting={ isEncrypting } importImages={ importImages } images={ images }></Images>
+                <LayersToImages isEncrypting={ isEncrypting } setIsEncrypting={ setIsEncrypting }></LayersToImages>
+              </div>
+                
+     
             </div>
             { /* end layers panel */ }
           </div>
