@@ -1,8 +1,8 @@
 import React from 'react'
 // import PlusPng from '../images/plus-symbol-button.png'
 // import MinusPng from '../images/minus.png'
-import { type LayerAttr } from '../models/layer'
-import * as id from '../constants/ids'
+import { type LayerAttr } from '../../models/layer'
+import * as id from '../../constants/ids'
 
 interface LayerProps {
   layerAttrs: LayerAttr[]

@@ -1,3 +1,5 @@
+import { github } from "../handlers/help";
+
 export const menuItems = [
     { text : "File", subMenuItems : [
         { text : "New project" },
@@ -19,6 +21,6 @@ export const menuItems = [
         { text : "Help", subMenuItems: [
             { text : "docs" },
         ]},
-        { text : "Github page" },
+        { text : "Github page" , handler: github},
     ]}
 ]

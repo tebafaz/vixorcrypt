@@ -1,7 +1,7 @@
 import React from 'react'
 // import PlusPng from '../images/plus-symbol-button.png';
 // import MinusPng from '../images/minus.png';
-import { type ImgAttr } from '../models/image'
+import { type ImgAttr } from '../../models/image'
 // import * as id from '../constants/id'
 
 interface ImagesProps {

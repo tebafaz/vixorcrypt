@@ -2,19 +2,22 @@ import React, { useEffect, useState } from 'react'
 import sha1 from 'crypto-js/sha1'
 import './css/style.css'
 import type { ImgAttr } from './models/image'
-import Images from './components/images'
+import Images from './components/xor-c/images'
 import { getHeightWidth, getMaxWH, imageExists, isOverflown } from './utils/image'
-import EncryptionLayers from './components/encryption_layers'
-import LayersToImages from './components/layers_to_images'
+import EncryptionLayers from './components/xor-c/shares'
+import LayersToImages from './components/xor-c/results'
 import type { LayerAttr } from './models/layer'
-import { fillBgRandPxl } from './utils/canvas'
 import TopBar from './components/top_bar'
 import * as id from './constants/ids'
 import { MenuBar } from './menubar/jdmenubar'
 import './constants/menubar'
 import { menuItems } from './constants/menubar'
+import { algorithm, craftMode } from './constants/types'
 
 const App: React.FC = () => {
+  const [craftMode, setCraftMode] = useState<craftMode>('select')
+  const [algorithm, setAlgorithm] = useState<algorithm>('xor-c')
+
   const [ctrlPressed, setCtrlPressed] = useState(false)
 
   const [canvasScale, setCanvasScale] = useState(1)
@@ -28,11 +31,11 @@ const App: React.FC = () => {
 
   const [images, setImages] = useState<ImgAttr[]>([])
 
-  // useEffect(() => {
-  //   document.addEventListener('keydown', (e) => { if (e.ctrlKey) { setCtrlPressed(true) } })
-  //   document.addEventListener('keyup', () => { setCtrlPressed(false) })
-  //   window.addEventListener('wheel', (e) => { if (e.ctrlKey) { e.preventDefault() } }, { passive: false })
-  // }, [])
+  useEffect(() => {
+    document.addEventListener('keydown', (e) => { if (e.ctrlKey) { setCtrlPressed(true) } })
+    document.addEventListener('keyup', () => { setCtrlPressed(false) })
+    window.addEventListener('wheel', (e) => { if (e.ctrlKey) { e.preventDefault() } }, { passive: false })
+  }, [])
 
   // useEffect(() => {
   //   const { maxH, maxW } = getMaxWH(images)
@@ -179,10 +182,10 @@ const App: React.FC = () => {
             
             <div className='flex flex-col w-96 max-h-full h-full bg-stone-300'>
               <div className='flex flex-row justify-evenly w-96 h-10 bg-blueGray-medium-dark'>
-                <button className='px-2 bottom-0 h-8 w-24 mb-0 bg-blueGray-light mt-auto'>
+                <button onClick={() => setCraftMode('select')} className={`px-2 bottom-0 h-8 w-24 mb-0 mt-auto ${craftMode == 'select' ? 'bg-blueGray-light' : 'bg-blueGray-medium-light'}`}>
                   <span className='text-white'>Select</span>
                 </button>
-                <button className='px-2 bottom-0 h-8 w-24 mb-0 bg-blueGray-medium-light mt-auto'>
+                <button onClick={() => setCraftMode('generate')} className={`px-2 bottom-0 h-8 w-24 mb-0 mt-auto ${craftMode == 'generate' ? 'bg-blueGray-light' : 'bg-blueGray-medium-light'}`}>
                   <span className='text-white'>Generate</span>
                 </button>
               </div>
