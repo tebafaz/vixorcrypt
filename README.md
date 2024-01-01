@@ -1,16 +1,8 @@
-# Viscrypt
-Viscrypt is the simplified XOR based visual cryptography algorithm for color image encryption. (In progress)
+# React + Vite
 
-## Start on local machine
-- For installing this project clone it from github: \
-`git clone https://github.com/Tebafaz/viscrypt`
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-- Install all dependencies: \
-`npm install`
+Currently, two official plugins are available:
 
-- Use tailwindcss for updating `src/css/style.css` file from `src/tailwindcss/source.css`: \
-`npx tailwindcss -i ./src/tailwindcss/source.css -o ./src/css/style.css --watch`
-
-- Start nodejs server: \
-`npm start`
-
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
