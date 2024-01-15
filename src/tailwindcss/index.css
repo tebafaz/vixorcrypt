@@ -1,3 +1,33 @@
+/* tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* scrollbar */
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+::-webkit-scrollbar-track {
+    display: none;
+}
+::-webkit-scrollbar-thumb {
+    background: #292929;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #303030;
+}
+::-webkit-scrollbar-corner {
+    background: #505050;
+}
+
+/* jdmenubar */
+:root {
+    --jdmenu-bg-color: rgb(74,74,86);
+    --jdmenu-border-color: rgb(0,0,0);
+    --jdmenu-focus-color: rgb(65,65,77);
+    --jdmenu-font-size: 15px;
+    --jdmenu-font-family: Helvetica;
+    --jdmenu-font-color: rgb(255,255,255);
+}
