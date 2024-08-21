@@ -1,40 +1,11 @@
 
 <script>
   import { onMount } from "svelte";
+  import encrypt from "../stores/mode";
+  import { encryptionMenuBarItems, decryptionMenuBarItems } from "../constants/menubar";
 
-  const dummy = () => {
-    open = false;
-    console.log("dummy func")
-  }
-
-  const menuItems = [
-    {
-      text: "File",
-      subMenuItems: [
-        { text: "Create canvas", handler: dummy },
-        { text: "Remove canvas" },
-        { text: "Export as" },
-      ]
-    },
-    {
-      text: "Edit",
-      subMenuItems: [
-        { text: "Canvas size" },
-      ]
-    },
-    {
-      text: "About",
-      subMenuItems: [
-        { text: "Help",
-          subMenuItems: [
-            { text: "Docs", handler: dummy },
-          ]
-        },
-        { text: "Github page", handler: dummy },
-      ]
-    }
-  ]
-
+  let menuItems
+  $: $encrypt ? menuItems = encryptionMenuBarItems : menuItems = decryptionMenuBarItems
 
   let open = false;
   let activeMenuIndex = -1;
@@ -42,21 +13,38 @@
 
 
   const toggleMenu = (index) => {
+    notOpenHandler()
     if (activeMenuIndex !== index && open) {
       activeMenuIndex = index;
       activeSubMenuIndex = -1;
-    } else if (!open) {
+    }
+  }
+
+  const notOpenHandler = () => {
+    if (!open) {
       activeMenuIndex = -1;
       activeSubMenuIndex = -1;
     }
   }
 
-  const toggleSubMenu = (index, subMenuExist) => {
-    if (activeSubMenuIndex === index && !subMenuExist) {
+  const toggleSubMenu = (index, subMenuItem) => {
+    notOpenHandler()
+    if (subMenuItem?.disabled) {
+      activeSubMenuIndex = -1;
+    } else if (activeSubMenuIndex === index && subMenuItem?.subMenuItems !== undefined) {
       activeSubMenuIndex = -1;
     } else if (activeSubMenuIndex !== index) {
       activeSubMenuIndex = index;
     }
+  }
+
+  const subMenuItemHandlerWrapper = (subSubMenuItem) => {
+    if (subSubMenuItem?.handler === undefined || subSubMenuItem?.disabled) {
+      return
+    }
+    open = false;
+    subSubMenuItem.handler()
+    notOpenHandler()
   }
 
   const clickOutside = (event) => {
@@ -97,7 +85,7 @@
         
         <div class=" absolute z-10 border border-1 border-black {activeMenuIndex === index1 ? 'bg-blueGray-medium-light' : 'hidden'} ">
           {#each menuItem.subMenuItems as subMenuItem, index2}
-            <div role="menuitem" tabindex="-1" class=" {activeSubMenuIndex === index2 ? 'bg-blueGray-medium-light' : ''} flex items-center text-white bg-blueGray-light border-black px-4 hover:bg-blueGray-medium-light z-10" on:mouseenter|stopPropagation={() => {toggleSubMenu(index2, subMenuItem?.subMenuItems !== undefined)}} on:mouseleave|stopPropagation={() => {closeSubMenu()}} on:click={subMenuItem.handler} on:keypress={subMenuItem.handler}>
+            <div role="menuitem" tabindex="-1" class="{subMenuItem.disabled ? 'text-gray-400' : 'text-white hover:bg-blueGray-medium-light'} {activeSubMenuIndex === index2 ? 'bg-blueGray-medium-light' : ''} flex items-center bg-blueGray-light border-black px-4 z-10" on:mouseenter|stopPropagation={() => {toggleSubMenu(index2, subMenuItem)}} on:mouseleave|stopPropagation={() => {closeSubMenu()}} on:click|stopPropagation={() => {subMenuItemHandlerWrapper(subMenuItem)}} on:keypress|stopPropagation={() => {subMenuItemHandlerWrapper(subMenuItem)}}>
               <span class="pl-2 pr-5">
                 {subMenuItem.text}
               </span>
@@ -107,7 +95,7 @@
                 </span>
                 <div class="absolute z-20 top-auto left-full border border-1 border-black {activeSubMenuIndex === index2 ? 'bg-blueGray-medium-light' : 'hidden'}">
                   {#each subMenuItem.subMenuItems as subSubMenuItem}
-                    <div role="menuitem" tabindex="-2" class="flex items-center text-white bg-blueGray-light border-black px-4 hover:bg-blueGray-medium-light z-20" on:click={subSubMenuItem.handler} on:keypress={subSubMenuItem.handler}>
+                    <div role="menuitem" tabindex="-2" class="flex items-center text-white bg-blueGray-light border-black px-4 hover:bg-blueGray-medium-light z-20" on:click|stopPropagation={() => {subMenuItemHandlerWrapper(subSubMenuItem)}} on:keypress|stopPropagation={() => {subMenuItemHandlerWrapper(subSubMenuItem)}}>
                       <span class="pl-2 pr-5"> 
                         {subSubMenuItem.text}
                       </span>

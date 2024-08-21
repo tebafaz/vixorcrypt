@@ -1,8 +1,9 @@
 import { writable } from "svelte/store";
 
 const canvasProps = writable({
-    sizeX: 0,
-    sizeY: 0,
+    initialized: false,
+    sizeX: -1,
+    sizeY: -1,
 });
 
 export default canvasProps;

@@ -8,10 +8,15 @@
   import DecImages from "./components/decryption/Images.svelte";
   import DecResults from "./components/decryption/Results.svelte";
   import encrypt from "./stores/mode";
+  import CreateCanvas from "./components/modals/CreateCanvas.svelte";
+  import CreateShares from "./components/modals/CreateShares.svelte";
 </script>
 
 
 <!-- <Modals /> -->
+<!-- <CreateCanvas /> -->
+<CreateCanvas />
+<CreateShares />
 
 
 <input multiple type='file' hidden accept='image/*' id='image-input'/>

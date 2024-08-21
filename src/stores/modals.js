@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
+import { closeModal } from "../constants/modals";
 
-const modalname = writable("");
+const modal = writable(closeModal);
 
-export default modalname;
+export default modal
