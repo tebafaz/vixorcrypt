@@ -2,7 +2,7 @@
   import modal from "../../stores/modals";
   import { createCanvasModal, closeModal } from "../../constants/modals";
   import { onDestroy } from "svelte";
-  import { createCanvas } from "../../handlers/modal";
+  import canvas from "../../stores/encrypt/canvas";
 
   let modalDiv;
   let width;
@@ -13,6 +13,17 @@
     }
   };
 
+
+
+  export const createCanvas = (width, height) => {
+    let tempCanvas = {
+      initialized: true,
+      sizeX: width,
+      sizeY: height,
+    }
+    canvas.set(tempCanvas)
+  }
+
   $: if ($modal === createCanvasModal) {
     setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
   } else {
@@ -22,6 +33,8 @@
   onDestroy(() => {
     document.removeEventListener('click', clickOutside);
   });
+
+
 </script>
 
 <div class='{$modal === createCanvasModal ? '' : 'hidden'} fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black modal' id='create-canvas-modal'>

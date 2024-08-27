@@ -2,7 +2,8 @@
   import modal from "../../stores/modals";
   import { closeModal, createSharesModal } from "../../constants/modals";
   import { onDestroy } from "svelte";
-  import { createShares } from "../../handlers/modal";
+  import shares from "../../stores/encrypt/shares";
+  import { defaultState } from "../../constants/shareState";
 
   const minShares = 2;
   const maxShares = 1000;
@@ -15,10 +16,29 @@
   };
   const enterHandler = () => {
     if (minShares <= sharesValue && sharesValue <= maxShares) {
-      createShares(sharesValue); 
+      createShares($shares, sharesValue); 
       $modal = closeModal;
     }
   }
+
+  const createShares = (oldShares, shareNumber) => {
+  let tempShares = new Map();
+  for (let i = 0; i < shareNumber; i++) {
+    if (oldShares.has(i)) {
+      tempShares.set(i, oldShares.get(i))
+    } else {
+      tempShares.set(i, {state: defaultState, picked: false})
+    }
+  }
+  for (let [key, val] of oldShares.entries()) {
+    if (key < shareNumber) {
+      continue
+    }
+    tempShares.set(key, val)
+  }
+  
+  shares.set(tempShares)
+}
 
   $: if ($modal === createSharesModal) {
     setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)

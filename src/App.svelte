@@ -10,11 +10,27 @@
   import encrypt from "./stores/mode";
   import CreateCanvas from "./components/modals/CreateCanvas.svelte";
   import CreateShares from "./components/modals/CreateShares.svelte";
+  import { openDatabase, removeImage } from './db/indexed';
+  import { onMount } from 'svelte';
+
+  let db;
+
+  // onMount(async () => {
+  //   db = await openDatabase();
+  // });
+
+  async function clearAllImages() {
+    // $imageHashes.forEach(async (hash) => {
+    //   await removeImage(db, hash);
+    // });
+
+    // imageHashes.set([]);
+  }
+  window.addEventListener('beforeunload', clearAllImages);
 </script>
 
 
 <!-- <Modals /> -->
-<!-- <CreateCanvas /> -->
 <CreateCanvas />
 <CreateShares />
 
@@ -22,7 +38,6 @@
 <input multiple type='file' hidden accept='image/*' id='image-input'/>
   <div class='w-full h-screen flex flex-col'>
     <Menubar />
-    <!-- <Topbar/> -->
     <!-- start workspace -->
     <div class='flex-auto'>
       <div class='w-full h-full flex flex-row'>

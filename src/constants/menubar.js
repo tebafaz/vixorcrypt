@@ -1,5 +1,4 @@
-import { dummyCreateCanvas, dummyDocs, dummyGithub } from "../handlers/dummy";
-import { openCreateCanvas } from "../handlers/modal";
+import { openCreateCanvas } from "../handlers/canvas";
 
 export const encryptionMenuBarItems = [
   {
@@ -24,7 +23,7 @@ export const encryptionMenuBarItems = [
           { text: "Docs", },
         ]
       },
-      { text: "Github page", handler: dummyGithub },
+      { text: "Github page" },
     ]
   }
 ]
@@ -49,10 +48,10 @@ export const decryptionMenuBarItems = [
     subMenuItems: [
       { text: "Help",
         subMenuItems: [
-          { text: "Docs", handler: dummyDocs },
+          { text: "Docs" },
         ]
       },
-      { text: "Github page", handler: dummyGithub },
+      { text: "Github page" },
     ]
   }
 ]
