@@ -12,6 +12,17 @@ import images from "../../stores/encrypt/images";
       results.set($results)
     }
   }
+  const onRemove = () => {
+    let newMap = new Map($results)
+    if (!$encryptionInput.stateEncrypting) {
+      for (let [key, val] of newMap.entries()) {
+        if (val.picked) {
+          newMap.delete(key)
+        }
+      }
+      results.set(newMap)
+    }
+  }
 </script>
 
 <div class='flex flex-1 flex-col h-1/3 bg-blueGray-light'>
@@ -56,7 +67,7 @@ import images from "../../stores/encrypt/images";
     <!-- end inner overflow item -->
   </div>
   <div class='flex h-7 items-center'>
-    <button class=' mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2'>
+    <button class=' mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={onRemove}>
       <span class='text-white text-sm'>Remove</span>
     </button>
   </div>

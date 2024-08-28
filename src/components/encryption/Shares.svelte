@@ -4,6 +4,35 @@
   import encryptionInput from "../../stores/encrypt/encryption";
   import modal from "../../stores/modals";
   import { createSharesModal } from "../../constants/modals";
+  import results from "../../stores/encrypt/results";
+
+  $: changeState($results, $shares)
+
+  const changeState = (res, shrs) => {
+    let lastShrs = []
+    for (let [key, val] of shrs.entries()) {
+      val.state = defaultState
+      shrs.set(key, val)
+    }
+    for (let [_, val] of res.entries()) {
+      let len = val.shares.length
+      
+      for (let i = 0; i < len; i++) {
+        if (i === len - 1) {
+          lastShrs.push(val.shares[i])
+        }
+        let val1 = shrs.get(val.shares[i])
+        val1.state = usedState
+        shrs.set(val.shares[i], val1)
+      }
+    }
+    for (const shr of lastShrs) {
+      let val1 = shrs.get(shr)
+      val1.state = chosenState
+      shrs.set(shr, val1)
+    }
+    shares.set(shrs)
+  }
 
   export const openCreateShares = () => {
     console.log("createShares")

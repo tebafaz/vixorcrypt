@@ -4,6 +4,24 @@
   import { getImageProps } from "../../handlers/images";
   import encryptionInput from "../../stores/encrypt/encryption";
   import { defaultState, usedState } from "../../constants/imageState";
+  import results from "../../stores/encrypt/results";
+
+  $: changeState($results, $images)
+
+  const changeState = (res, imgs) => {
+    for (let [key, val] of imgs.entries()) {
+      val.state = defaultState
+      imgs.set(key, val)
+    }
+    for (let [_, val] of res.entries()) {
+      if (imgs.has(val.imgHash)) {
+        let val1 = imgs.get(val.imgHash)
+        val1.state = usedState
+        imgs.set(val.imgHash, val1)
+      }
+    }
+    images.set(imgs)
+  }
 
   let imageInput;
 
@@ -44,7 +62,6 @@
   }
 
   const pickHandler = (key, val) => {
-    console.log(val.state, $encryptionInput)
     if ($encryptionInput.stateEncrypting) {
       for (let [key1, val1] of $images.entries()) {
         if (val1.picked) {

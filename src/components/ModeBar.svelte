@@ -5,11 +5,87 @@
   import encrypt from "../stores/mode";
   import results from "../stores/encrypt/results";
   import { sha224 } from "js-sha256";
-  import { usedState } from "../constants/imageState";
   import { chosenState } from "../constants/shareState";
+
+  $: shareCreationLogic($shares, $images)
   
-  $: $encryptionInput.stateEncrypting && Array.from($shares.values()).filter(val => val.picked).length > 1  && Array.from($images.values()).filter(val => val.picked).length === 1 ? $encryptionInput.canCreate = true : $encryptionInput.canCreate = false
-  
+  const shareCreationLogic = (shrs, imgs) => {
+    if (!$encryptionInput.stateEncrypting) {
+      return
+    }
+    // starting value of canCreate false, so that returning from function wil result in rejection
+    $encryptionInput.canCreate = false
+    let imgPicked = false
+    for (let [_, val] of imgs.entries()) {
+      if (val.picked) {
+        imgPicked = true
+        break
+      }
+    }
+    // image has to be picked
+    if (!imgPicked) {
+      return
+    }
+    // changeable shares count
+    let pickedNum = 0
+    // all picked shares
+    let pickedShrs = []
+    // latest share number
+    let latestShr = -1
+    // chosenShares can only count once
+    let chosenOnce = 1
+    for (let [key, val] of shrs.entries()) {
+      if (val.picked) {
+        if (val.state !== chosenState) {
+          pickedNum++
+        } else {
+          pickedNum += chosenOnce
+          chosenOnce = 0
+        }
+        pickedShrs.push(key)
+        latestShr = key
+      }
+    }
+    // check for number of changeable shares
+    if (pickedNum < 2) {
+      return
+    }
+    // check for latest share to not be chosen
+    if ($shares.has(latestShr) && $shares.get(latestShr).state === chosenState) {
+      return
+    }
+
+    // check each results' share combination
+    for (let [_, val] of $results.entries()) {
+      let minLen = Math.min(val.shares.length, pickedShrs.length)
+      // if starting point is different, it will result in different image
+      if (pickedShrs[0] !== val.shares[0]) {
+        break
+      }
+      let similar = true
+      for (let i = 0; i < minLen; i++) {
+        // if shares are not similar, resulting image will be different
+        if (pickedShrs[i] !== val.shares[i]) {
+          similar = false
+          break
+        }
+      }
+      if (similar) {
+        let shareOff = Math.abs(pickedShrs.length - val.shares.length)
+        // shares have to be off by 2 if similar to make up another random image without losing enthropy
+        if (shareOff >= 2) {
+          break
+        } else {
+          return
+        }
+      } else {
+        break
+      }
+    }
+    
+    $encryptionInput.canCreate = true
+  }
+
   const changeModeEncrypt = () => {
     $encrypt = true
   }
@@ -47,31 +123,16 @@
 
   const createResult = () => {
     let shrs = []
-    let lastShare
     for (let [key, val] of $shares.entries()) {
       if (val.picked) {
-        let val1 = $shares.get(key)
-        if (val1.state !== chosenState) {
-          val1.state = usedState
-          $shares.set(key, val1)
-        }
         shrs.push(key)
-        
-        lastShare = key
       }
     }
-    let lastShareVal = $shares.get(lastShare)
-    lastShareVal.state = chosenState
-    $shares.set(lastShare, lastShareVal)
 
     let imgHash
     for (let [key, val] of $images.entries()) {
       if (val.picked) {
         imgHash = key
-        let val1 = $images.get(key)
-        val1.state = usedState
-        $images.set(key, val1)
-        images.set($images)
       }
     }
     let newRes = {
