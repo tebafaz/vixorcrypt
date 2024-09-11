@@ -22,7 +22,6 @@ export const resizeStage = (konvaStage, wrapper, verticalBar, horizontalBar, inn
     verticalBar.position(verticalBarPos)
     horizontalBar.position(horizontalBarPos)
 
-    console.log("konva height", konvaStage.width(), innerCanvas.x())
     if (innerCanvas.y() < 0 || innerCanvas.y() + innerCanvas.height() > konvaStage.height()) {
       verticalBar.visible(true)
     } else {
@@ -185,7 +184,6 @@ const onCtrlWheel = (konvaStage, innerCanvasBox, verticalBar, horizontalBar, cur
     x: PADDING,
     y: konvaStage.height() - PADDING - 10,
   }
-  console.log("vert", verticalBarPos, horizontalBarPos)
   verticalBar.visible(true)
   horizontalBar.visible(true)
   verticalBar.position(verticalBarPos)

@@ -10,7 +10,6 @@
   let modalDiv
   let sharesValue = minShares
   const clickOutside = async (event) => {
-    console.log("outside")
     if (!modalDiv.contains(event.target)) {
       $modal = closeModal
     }

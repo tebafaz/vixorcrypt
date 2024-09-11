@@ -35,7 +35,6 @@
   }
 
   export const openCreateShares = () => {
-    console.log("createShares")
     modal.set(createSharesModal)
   }
 
