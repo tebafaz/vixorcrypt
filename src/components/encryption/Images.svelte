@@ -1,12 +1,19 @@
 <script>
-  import imageCompression from "browser-image-compression";
-  import images from "../../stores/encrypt/images";
-  import { getImageProps } from "../../handlers/images";
-  import encryptionInput from "../../stores/encrypt/encryption";
-  import { defaultState, usedState } from "../../constants/imageState";
-  import results from "../../stores/encrypt/results";
+  import imageCompression from "browser-image-compression"
+  import images from "../../stores/encrypt/images"
+  import { getImageProps, getMaxWidthAndHeight } from "../../utils/images"
+  import encryptionInput from "../../stores/encrypt/encryption"
+  import { defaultState, usedState } from "../../constants/imageState"
+  import results from "../../stores/encrypt/results"
+  import encImgSvc from "../../db/encImageService"
+  import canvasProps from "../../stores/encrypt/canvas"
+  import { fileToUint8ClampedArray } from "../../utils/imageEncryption"
+
+  let imageInput
+
 
   $: changeState($results, $images)
+  $: encImgSvc.deleteAllExceptByHash(Array.from($images.keys()))
 
   const changeState = (res, imgs) => {
     for (let [key, val] of imgs.entries()) {
@@ -23,13 +30,16 @@
     images.set(imgs)
   }
 
-  let imageInput;
-
   const handleFileChange = async (event) => {
-    const files = event.target.files;
-    const options = {
-      maxSizeMB: 1,
+    const files = event.target.files
+    const previewOptions = {
+      maxSizeMB: 0.1,
       maxWidthOrHeight: 80,
+      useWebWorker: true
+    }
+    const originalOptions = {
+      maxSizeMB: 5,
+      maxWidthOrHeight: 1920,
       useWebWorker: true
     }
     
@@ -38,30 +48,53 @@
       if ($images.has(imgProps.hash)) {
         continue
       }
-      imageCompression(file, options)
-        .then(async function (compressedFile) {
-          let arrayBuf = await imageCompression.getDataUrlFromFile(compressedFile)
-          let imageProps = {
-            base64: arrayBuf,
-            hash: imgProps.hash,
-            filename: file.name,
-            width: imgProps.width,
-            height: imgProps.height,
-            state: defaultState, 
-            picked: false
+      let arrayBuf
+      if (imgProps.width > 1920 || imgProps.height > 1920) {
+        await imageCompression(file, originalOptions)
+          .then(async function (compressedFile) {
+            imgProps = await getImageProps(compressedFile)
+            const imgArr = await fileToUint8ClampedArray(compressedFile)
+            encImgSvc.insertEncImage(imgProps.hash, imgArr)
+          })
+          .catch(function (error) {
+            console.error(error.message)
           }
-          let newImages = new Map($images)
-          newImages.set(imgProps.hash, imageProps)
-          images.set(newImages)
+        )
+      } else {
+        const imgArr = await fileToUint8ClampedArray(file)
+        encImgSvc.insertEncImage(imgProps.hash, imgArr)
+      }
+      await imageCompression(file, previewOptions)
+        .then(async function (compressedFile) {
+          arrayBuf = await imageCompression.getDataUrlFromFile(compressedFile)
         })
         .catch(function (error) {
-          console.log(error.message);
+          console.error(error.message)
         }
-      );
+        
+      )
+      let imageProps = {
+        base64: arrayBuf,
+        hash: imgProps.hash,
+        filename: file.name,
+        width: imgProps.width,
+        height: imgProps.height,
+        state: defaultState, 
+        picked: false
+      }
+      let newImages = new Map($images)
+      newImages.set(imgProps.hash, imageProps)
+      images.set(newImages)
+    }
+    if (!$canvasProps.initialized) {
+      let maxWidthAndHeight = getMaxWidthAndHeight($images)
+      $canvasProps.sizeX = maxWidthAndHeight.maxWidth
+      $canvasProps.sizeY = maxWidthAndHeight.maxHeight
+      $canvasProps.initialized = true
     }
   }
 
-  const pickHandler = (key, val) => {
+  const pickHandler = async (key, val) => {
     if ($encryptionInput.stateEncrypting) {
       for (let [key1, val1] of $images.entries()) {
         if (val1.picked) {

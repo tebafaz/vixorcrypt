@@ -1,8 +1,8 @@
 <script>
-  import encryptionInput from "../../stores/encrypt/encryption";
-import images from "../../stores/encrypt/images";
-  import results from "../../stores/encrypt/results";
-  // import shares from "../../stores/encrypt/shares";
+  import encryptionInput from "../../stores/encrypt/encryption"
+import images from "../../stores/encrypt/images"
+  import results from "../../stores/encrypt/results"
+  // import shares from "../../stores/encrypt/shares"
 
   const onClick = (key) => {
     if (!$encryptionInput.stateEncrypting) {

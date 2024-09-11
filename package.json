@@ -17,7 +17,10 @@
     "vite": "^5.4.0"
   },
   "dependencies": {
+    "@zip.js/zip.js": "^2.7.52",
     "browser-image-compression": "^2.0.2",
-    "js-sha256": "^0.11.0"
+    "dexie": "^4.0.8",
+    "js-sha256": "^0.11.0",
+    "konva": "^9.3.14"
   }
 }

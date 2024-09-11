@@ -1,10 +1,10 @@
 <script>
-  import shares from "../../stores/encrypt/shares";
-  import { shareState, defaultState, usedState, chosenState } from "../../constants/shareState";
-  import encryptionInput from "../../stores/encrypt/encryption";
-  import modal from "../../stores/modals";
-  import { createSharesModal } from "../../constants/modals";
-  import results from "../../stores/encrypt/results";
+  import shares from "../../stores/encrypt/shares"
+  import { shareState, defaultState, usedState, chosenState } from "../../constants/shareState"
+  import encryptionInput from "../../stores/encrypt/encryption"
+  import modal from "../../stores/modals"
+  import { createSharesModal } from "../../constants/modals"
+  import results from "../../stores/encrypt/results"
 
   $: changeState($results, $shares)
 

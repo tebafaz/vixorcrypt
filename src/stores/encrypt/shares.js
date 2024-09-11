@@ -1,5 +1,5 @@
-import { writable } from "svelte/store";
+import { writable } from "svelte/store"
 
-const shares = writable(new Map());
+const shares = writable(new Map())
 
-export default shares;
+export default shares

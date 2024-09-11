@@ -1,39 +1,38 @@
 <script>
-  import modal from "../../stores/modals";
-  import { createCanvasModal, closeModal } from "../../constants/modals";
-  import { onDestroy } from "svelte";
-  import canvas from "../../stores/encrypt/canvas";
+  import modal from "../../stores/modals"
+  import { createCanvasModal, closeModal } from "../../constants/modals"
+  import { onDestroy, tick } from "svelte"
+  import canvas from "../../stores/encrypt/canvas"
 
-  let modalDiv;
-  let width;
-  let heigth;
+  let modalDiv
+  let width
+  let heigth
   const clickOutside = (event) => {
     if (!modalDiv.contains(event.target)) {
-      $modal = closeModal;
+      $modal = closeModal
     }
-  };
-
-
+  }
 
   export const createCanvas = (width, height) => {
     let tempCanvas = {
-      initialized: true,
+      initialized: false,
       sizeX: width,
       sizeY: height,
     }
     canvas.set(tempCanvas)
+    $modal = closeModal
   }
 
-  $: if ($modal === createCanvasModal) {
-    setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
-  } else {
-    document.removeEventListener('click', clickOutside);
+  $: clickOutsideListener($modal)
+
+  const clickOutsideListener = async (mod) => {
+    if (mod === createCanvasModal) {
+      // await tick()
+      document.addEventListener('click', clickOutside)
+    } else {
+      document.removeEventListener('click', clickOutside)
+    }
   }
-
-  onDestroy(() => {
-    document.removeEventListener('click', clickOutside);
-  });
-
 
 </script>
 
@@ -43,6 +42,6 @@
     <input bind:value={width} type="number" pattern={'d'} id='canvas-width' /><span class='text-white'>px</span><br /><br />
     <span class='text-white'>Height: </span>
     <input bind:value={heigth} type="number" pattern={'d'} id='canvas-height' /><span class='text-white'>px</span><br />
-    <button class='hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark p-1 text-white' on:click={() => {createCanvas(width, heigth); $modal = closeModal}}>Enter</button>
+    <button class='hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark p-1 text-white' on:click={() => {createCanvas(width, heigth)}}>Enter</button>
   </div>
 </div>

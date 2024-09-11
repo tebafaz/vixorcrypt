@@ -1,18 +1,18 @@
-import { openCreateCanvas } from "../handlers/canvas";
+import { createCanvasHandler, decExportAsHandler, editCanvasSizeHandler, encExportAsHandler, openDocsHandler, openGithubPage, removeCanvasHandler } from "../handlers/menubar"
 
 export const encryptionMenuBarItems = [
   {
     text: "File",
     subMenuItems: [
-      { text: "Create canvas", handler: openCreateCanvas},
-      { text: "Remove canvas" },
-      { text: "Export as" },
+      { text: "Create canvas", handler: createCanvasHandler},
+      { text: "Remove canvas", handler: removeCanvasHandler },
+      { text: "Export as", handler: encExportAsHandler },
     ]
   },
   {
     text: "Edit",
     subMenuItems: [
-      { text: "Canvas size"},
+      { text: "Canvas size", handler: editCanvasSizeHandler},
     ]
   },
   {
@@ -20,10 +20,10 @@ export const encryptionMenuBarItems = [
     subMenuItems: [
       { text: "Help",
         subMenuItems: [
-          { text: "Docs", },
+          { text: "Docs", handler: openDocsHandler },
         ]
       },
-      { text: "Github page" },
+      { text: "Github page", handler: openGithubPage },
     ]
   }
 ]
@@ -32,9 +32,9 @@ export const decryptionMenuBarItems = [
   {
     text: "File",
     subMenuItems: [
-      { text: "Create canvas", handler: openCreateCanvas, disabled: true },
-      { text: "Remove canvas" },
-      { text: "Export as" },
+      { text: "Create canvas", disabled: true },
+      { text: "Remove canvas", disabled: true },
+      { text: "Export as", handler: decExportAsHandler },
     ]
   },
   {
@@ -48,10 +48,10 @@ export const decryptionMenuBarItems = [
     subMenuItems: [
       { text: "Help",
         subMenuItems: [
-          { text: "Docs" },
+          { text: "Docs", handler: openDocsHandler },
         ]
       },
-      { text: "Github page" },
+      { text: "Github page", handler: openGithubPage },
     ]
   }
 ]

@@ -1,20 +1,21 @@
 <script>
-  import logo from "../../assets/logo.png";
-  import canvas from "../../stores/decrypt/canvas";
+  import logo from "../../assets/logo.png"
+  import canvas from "../../stores/decrypt/canvas"
+  import canvasProps from "../../stores/decrypt/canvas"
+
+  let wrapper
+
 </script>
 
-<div class='flex-auto relative overflow-scroll' id='canvas-holder-2' >
-  <div class='absolute m-auto inset-0 grid content-center justify-center outline-dashed outline-1 outline-stone-900' id='canvas-holder-1'>
-    {#if !$canvas.initialized}
-      <img class='h-52 w-auto mx-auto pixelated' src={ logo } alt='vixorcrypt_logo' />
-      <br />
-      <span class='text-blueGray-light text-4xl pointer-events-none'>Canvas will be created as soon as all the shares are loaded</span>
-    {/if}
-    {#if $canvas.initialized}
-      <canvas class='align-top' id='main-canvas'>
-        <!-- canvas -->
-      </canvas>
-    {/if}
-    
-  </div>
+
+<div bind:this={wrapper} class='flex-auto min-h-0 '>
+  {#if !$canvasProps.initialized}
+    <div class='flex flex-col justify-center items-center relative w-full h-full select-none'>
+      <div>
+        <img class='h-52 w-auto mx-auto pixelated' src={ logo } alt='vixorcrypt_logo' />
+        <br />
+        <span class='text-blueGray-light text-4xl pointer-events-none'>Canvas will be created as soon as all the images are loaded</span>
+      </div>
+    </div>
+  {/if}
 </div>

@@ -1,58 +1,70 @@
 <script>
-  import modal from "../../stores/modals";
-  import { closeModal, createSharesModal } from "../../constants/modals";
-  import { onDestroy } from "svelte";
-  import shares from "../../stores/encrypt/shares";
-  import { defaultState } from "../../constants/shareState";
+  import modal from "../../stores/modals"
+  import { closeModal, createSharesModal } from "../../constants/modals"
+  import { onDestroy, onMount, tick } from "svelte"
+  import shares from "../../stores/encrypt/shares"
+  import { defaultState } from "../../constants/shareState"
 
-  const minShares = 2;
-  const maxShares = 1000;
-  let modalDiv;
-  let sharesValue = minShares;
-  const clickOutside = (event) => {
+  const minShares = 2
+  const maxShares = 1000
+  let modalDiv
+  let sharesValue = minShares
+  const clickOutside = async (event) => {
+    console.log("outside")
     if (!modalDiv.contains(event.target)) {
-      $modal = closeModal;
+      $modal = closeModal
     }
-  };
+  }
   const enterHandler = () => {
     if (minShares <= sharesValue && sharesValue <= maxShares) {
-      createShares($shares, sharesValue); 
-      $modal = closeModal;
+      createShares($shares, sharesValue) 
+      $modal = closeModal
     }
   }
 
   const createShares = (oldShares, shareNumber) => {
-  let tempShares = new Map();
-  for (let i = 0; i < shareNumber; i++) {
-    if (oldShares.has(i)) {
-      tempShares.set(i, oldShares.get(i))
+    let tempShares = new Map()
+    for (let i = 0; i < shareNumber; i++) {
+      if (oldShares.has(i)) {
+        tempShares.set(i, oldShares.get(i))
+      } else {
+        tempShares.set(i, {state: defaultState, picked: false})
+      }
+    }
+    for (let [key, val] of oldShares.entries()) {
+      if (key < shareNumber) {
+        continue
+      }
+      tempShares.set(key, val)
+    }
+    
+    shares.set(tempShares)
+  }
+
+  $: clickOutsideListener($modal)
+
+  const clickOutsideListener = async (mod) => {
+    if (mod === createSharesModal) {
+      // await tick()
+      // document.addEventListener('click', clickOutside)
+      setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
     } else {
-      tempShares.set(i, {state: defaultState, picked: false})
+      document.removeEventListener('click', clickOutside)
     }
   }
-  for (let [key, val] of oldShares.entries()) {
-    if (key < shareNumber) {
-      continue
-    }
-    tempShares.set(key, val)
-  }
-  
-  shares.set(tempShares)
-}
 
-  $: if ($modal === createSharesModal) {
-    setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
-  } else {
-    document.removeEventListener('click', clickOutside);
-  }
+  // onMount(() => {
+    
+  //   setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
+  //   return () => {
+  //     document.removeEventListener('click', clickOutside)
+  //   }
+  // })
 
-  onDestroy(() => {
-    document.removeEventListener('click', clickOutside);
-  });
 </script>
 
 <div class='{$modal === createSharesModal ? '' : 'hidden'} fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black modal' id='create-canvas-modal'>
-  <div bind:this={modalDiv} class='absolute bg-blueGray-light inset-0 m-auto p-8 w-96 h-40 text-center'>
+  <div bind:this={modalDiv} class='absolute bg-blueGray-light inset-0 m-auto p-8 w-96 h-40 text-center' on:loadstart={() => {document.addEventListener('click', clickOutside)}}>
     <span class='text-white'>Write the number of shares</span>
     <input bind:value={sharesValue} type="number" max={ maxShares } min={ minShares } pattern={'d'} class='invalid:bg-red-500 m-2' id='layer-count' /><br />
     <span class='text-xs text-red-400'>min={ minShares } max={ maxShares }</span><br />

@@ -1,5 +1,5 @@
-import { defaultState } from "../constants/shareState";
-import shares from "../stores/encrypt/shares";
+import { defaultState } from "../constants/shareState"
+import shares from "../stores/encrypt/shares"
 
 export const removeShares = (oldShares, ids) => {
   let tempShares = new Map(oldShares)

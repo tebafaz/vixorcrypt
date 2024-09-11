@@ -1,11 +1,12 @@
 <script>
-  import encryptionInput from "../stores/encrypt/encryption";
-  import images from "../stores/encrypt/images";
-  import shares from "../stores/encrypt/shares";
-  import encrypt from "../stores/mode";
-  import results from "../stores/encrypt/results";
-  import { sha224 } from "js-sha256";
-  import { chosenState } from "../constants/shareState";
+  import encryptionInput from "../stores/encrypt/encryption"
+  import images from "../stores/encrypt/images"
+  import shares from "../stores/encrypt/shares"
+  import encrypt from "../stores/mode"
+  import results from "../stores/encrypt/results"
+  import { sha224 } from "js-sha256"
+  import { chosenState } from "../constants/shareState"
+  import decryptionInput from "../stores/decrypt/decryption"
 
   $: shareCreationLogic($shares, $images)
   
@@ -94,7 +95,7 @@
     $encrypt = false
   }
 
-  const unpickAll = () => {
+  const unpickAllEnc = () => {
     for (let [key, val] of $images.entries()) {
       val.picked = false
       $images.set(key, val)
@@ -113,19 +114,30 @@
   }
 
   const changeStateEncrypting = () => {
-    unpickAll()
+    unpickAllEnc()
     $encryptionInput.stateEncrypting = true
   }
-  const changeStateDecrypting = () => {
-    unpickAll()
+  const changeStateNotEncrypting = () => {
+    unpickAllEnc()
     $encryptionInput.stateEncrypting = false
   }
 
-  const createResult = () => {
+  const changeStateDecrypting = () => {
+    // unpickAllEnc()
+    $decryptionInput.stateDecrypting = true
+  }
+  const changeStateNotDecrypting = () => {
+    // unpickAllEnc()
+    $decryptionInput.stateDecrypting = false
+  }
+
+  const createEncResult = () => {
     let shrs = []
+    let latestShr = -1
     for (let [key, val] of $shares.entries()) {
       if (val.picked) {
         shrs.push(key)
+        latestShr = key
       }
     }
 
@@ -137,28 +149,32 @@
     }
     let newRes = {
       shares: shrs,
+      lastShare: latestShr,
       imgHash: imgHash,
       picked: false
     }
     let hash = sha224(JSON.stringify(newRes))
     $results.set(hash, newRes)
     results.set($results)
-    unpickAll()
+    unpickAllEnc()
     $encryptionInput.canCreate = false
     $encryptionInput.stateEncrypting = false
   }
+
+  const createDecResult = () => {}
+
 </script>
 
 <div class='flex flex-row justify-evenly w-96 h-10 bg-blueGray-medium-dark relative'>
   {#if $encrypt}
     {#if $encryptionInput.stateEncrypting}
       {#if $encryptionInput.canCreate}
-        <button class='absolute left-0 bottom-0 h-8 w-8 bg-cyan-500 hover:bg-cyan-300' on:click={createResult}>
+        <button class='absolute left-0 bottom-0 h-8 w-8 bg-cyan-500 hover:bg-cyan-300' on:click={createEncResult}>
           <span class='text-white'>&#10003;</span>
         </button>
       {/if}
       {#if !$encryptionInput.canCreate}
-        <button class='absolute left-0 bottom-0 h-8 w-8 bg-red-500 hover:bg-red-800' on:click={changeStateDecrypting}>
+        <button class='absolute left-0 bottom-0 h-8 w-8 bg-red-500 hover:bg-red-800' on:click={changeStateNotEncrypting}>
           <span class='text-white'>&#10005;</span>
         </button>
       {/if}
@@ -169,6 +185,25 @@
       </button>
     {/if}
   {/if}
+  {#if !$encrypt}
+  {#if $decryptionInput.stateDecrypting}
+    {#if $decryptionInput.canCreate}
+      <button class='absolute left-0 bottom-0 h-8 w-8 bg-cyan-500 hover:bg-cyan-300' on:click={createDecResult}>
+        <span class='text-white'>&#10003;</span>
+      </button>
+    {/if}
+    {#if !$decryptionInput.canCreate}
+      <button class='absolute left-0 bottom-0 h-8 w-8 bg-red-500 hover:bg-red-800' on:click={changeStateNotDecrypting}>
+        <span class='text-white'>&#10005;</span>
+      </button>
+    {/if}
+  {/if}
+  {#if !$decryptionInput.stateDecrypting}  
+    <button class='absolute left-0 bottom-0 h-8 w-8 bg-emerald-800 hover:bg-emerald-900' on:click={changeStateDecrypting}>
+      <span class='text-white'>&#11208;</span>
+    </button>
+  {/if}
+{/if}
   <button class="px-2 bottom-0 h-8 w-24 mb-0 mt-auto { $encrypt ? 'bg-blueGray-light' : ' bg-blueGray-medium-dark'}" on:click={changeModeEncrypt}>
     <span class='text-white'>Encrypt</span>
   </button>

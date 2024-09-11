@@ -11,7 +11,6 @@ export const getImageProps = (image) => {
             let hash = sha224.hex(event.target.result.toString())
             resolve({ hash: hash, width: img.width, height: img.height })
           }
-          // @ts-ignore
           img.src = fileReader.result
         }
         fileReader.readAsDataURL(image)
@@ -19,4 +18,18 @@ export const getImageProps = (image) => {
         reject(e)
       }
     })
+  }
+
+  export const getMaxWidthAndHeight = (imageProps) => {
+    let maxWidth = 0
+    let maxHeight = 0
+    for(let val of imageProps.values()) {
+      if (maxHeight < val.height) {
+        maxHeight = val.height
+      }
+      if (maxWidth < val.width) {
+        maxWidth = val.width
+      }
+    }
+    return {maxWidth, maxHeight}
   }

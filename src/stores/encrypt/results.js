@@ -1,5 +1,5 @@
-import { writable } from "svelte/store";
+import { writable } from "svelte/store"
 
-const results = writable(new Map());
+const results = writable(new Map())
 
-export default results; // encryptionInput result
+export default results // encryptionInput result

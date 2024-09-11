@@ -1,40 +1,40 @@
 
 <script>
-  import { onMount } from "svelte";
-  import encrypt from "../stores/mode";
-  import { encryptionMenuBarItems, decryptionMenuBarItems } from "../constants/menubar";
+  import { onMount } from "svelte"
+  import encrypt from "../stores/mode"
+  import { encryptionMenuBarItems, decryptionMenuBarItems } from "../constants/menubar"
 
   let menuItems
   $: $encrypt ? menuItems = encryptionMenuBarItems : menuItems = decryptionMenuBarItems
 
-  let open = false;
-  let activeMenuIndex = -1;
-  let activeSubMenuIndex = -1;
+  let open = false
+  let activeMenuIndex = -1
+  let activeSubMenuIndex = -1
 
 
   const toggleMenu = (index) => {
     notOpenHandler()
     if (activeMenuIndex !== index && open) {
-      activeMenuIndex = index;
-      activeSubMenuIndex = -1;
+      activeMenuIndex = index
+      activeSubMenuIndex = -1
     }
   }
 
   const notOpenHandler = () => {
     if (!open) {
-      activeMenuIndex = -1;
-      activeSubMenuIndex = -1;
+      activeMenuIndex = -1
+      activeSubMenuIndex = -1
     }
   }
 
   const toggleSubMenu = (index, subMenuItem) => {
     notOpenHandler()
     if (subMenuItem?.disabled) {
-      activeSubMenuIndex = -1;
+      activeSubMenuIndex = -1
     } else if (activeSubMenuIndex === index && subMenuItem?.subMenuItems !== undefined) {
-      activeSubMenuIndex = -1;
+      activeSubMenuIndex = -1
     } else if (activeSubMenuIndex !== index) {
-      activeSubMenuIndex = index;
+      activeSubMenuIndex = index
     }
   }
 
@@ -42,35 +42,35 @@
     if (subSubMenuItem?.handler === undefined || subSubMenuItem?.disabled) {
       return
     }
-    open = false;
+    open = false
     subSubMenuItem.handler()
     notOpenHandler()
   }
 
   const clickOutside = (event) => {
     if (!event.target.closest('.menu-container')) {
-      activeMenuIndex = -1;
-      activeSubMenuIndex = -1;
-      open = false;
+      activeMenuIndex = -1
+      activeSubMenuIndex = -1
+      open = false
     }
   }
 
   onMount(() => {
-    document.addEventListener('click', clickOutside);
+    document.addEventListener('click', clickOutside)
     return () => {
-      document.removeEventListener('click', clickOutside);
-    };
-  });
+      document.removeEventListener('click', clickOutside)
+    }
+  })
 
   const toggleOpen = () => {
     if (activeSubMenuIndex !== -1) {
       return
     }
-    open = !open;
+    open = !open
   }
 
   const closeSubMenu = () => {
-    activeSubMenuIndex= -1;
+    activeSubMenuIndex= -1
   }
 
 </script>

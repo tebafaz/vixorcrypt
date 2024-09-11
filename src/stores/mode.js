@@ -1,5 +1,5 @@
-import { writable } from "svelte/store";
+import { writable } from "svelte/store"
 
-const encrypt = writable(true);
+const encrypt = writable(true)
 
-export default encrypt;
+export default encrypt
