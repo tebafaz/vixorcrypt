@@ -1,19 +1,20 @@
 <script>
-  import { onMount, onDestroy, tick } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import logo from "../../assets/logo.png"
   import canvasProps from "../../stores/encrypt/canvas"
-  import images from "../../stores/encrypt/images"
-  import encryptionInput from "../../stores/encrypt/encryption"
-  import encImgSvc from "../../db/encImageService"
   import konva from "konva"
   import { initKonva, resizeStage } from "../../utils/konva"
+  import encryptionInput from "../../stores/encrypt/encryption";
+  import images from "../../stores/encrypt/images";
+  import { handleEncKonvaImage } from "../../utils/konvaEnc";
 
-  let wrapper
-  let konvaStage
-  let innerCanvasBox
-  let horizontalBar
-  let verticalBar
+  let wrapper // stage wrapper
+  let konvaStage // stage
+  let group // group that holds image and box
+  let image // just image
+  let box // box for border of group
 
+  $: handleEncKonvaImage(group, $encryptionInput.stateEncrypting, $images)
 
   $: monitorCanvas($canvasProps.initialized)
 
@@ -23,16 +24,12 @@
 
   const monitorCanvas = (initialized) => {
     if (initialized && wrapper) {
-      [konvaStage, innerCanvasBox, verticalBar, horizontalBar] = initKonva(wrapper, $canvasProps)
+      [konvaStage, group, box] = initKonva(wrapper, $canvasProps)
     } 
   }
 
-  const resizeObserver = new ResizeObserver(() => {
-      resizeStage(konvaStage, wrapper, verticalBar, horizontalBar, innerCanvasBox, $canvasProps)
-    })
-
     const handleResize = () => {
-      resizeStage(konvaStage, wrapper, verticalBar, horizontalBar, innerCanvasBox, $canvasProps)
+      resizeStage(konvaStage, wrapper, group, $canvasProps)
     }
 
     window.addEventListener('resize', handleResize)

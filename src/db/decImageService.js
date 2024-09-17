@@ -25,6 +25,19 @@ class DecImageService {
     }
   }
 
+  async updateDecImageByHash(hash, newImageData) {
+    try {
+      const success = await this.db.decImgs.update(hash, { image: newImageData })
+      if (success) {
+        console.log('DecImg updated successfully.')
+      } else {
+        console.warn('No record found with the provided hash.')
+      }
+    } catch (error) {
+      console.error('Failed to update DecImg:', error)
+    }
+  }
+
   async removeDecImageByHash(hash) {
     try {
       await this.db.decImgs.delete(hash)
@@ -38,6 +51,15 @@ class DecImageService {
       return count > 0
     } catch (error) {
       console.error('Failed to exist DecImg:', error)
+    }
+  }
+
+  async deleteAll() {
+    try {
+      await this.db.decImgs.clear()
+      console.log('Deleted all DecImgs')
+    } catch (error) {
+      console.error('Error during deletion:', error)
     }
   }
 
