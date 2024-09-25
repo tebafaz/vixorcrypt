@@ -7,23 +7,38 @@
   import decImgSvc from "../../db/decImageService"
   import { fileToUint8ClampedArray } from "../../utils/imageEncryption"
   import { defaultState, usedState } from "../../constants/imageState"
+  import loading from "../../stores/loading"
+  import results from "../../stores/decrypt/results";
 
   let imageInput
   let constWidth
   let constHeight
 
+  $: changeState($results)
+
+  const changeState = (res) => {
+    for (let [key, val] of $images) {
+      val.state = defaultState
+      $images.set(key, val)
+    }
+    for (const [key, val] of res) {
+      for (const imgHash of val.shares) {
+        const imgVal = $images.get(imgHash)
+        imgVal.state = usedState
+        $images.set(imgHash, imgVal)
+      }
+    }
+    images.set($images)
+  }
+
   const handleFileChange = async (event) => {
+    loading.inc()
     const files = event.target.files
     const previewOptions = {
       maxSizeMB: 0.1,
       maxWidthOrHeight: 80,
       useWebWorker: true
     }
-    // const originalOptions = {
-    //   maxSizeMB: 5,
-    //   maxWidthOrHeight: 1920,
-    //   useWebWorker: true
-    // }
     
     for (let file of files) {
       let imgProps = await getImageProps(file)
@@ -31,8 +46,8 @@
         continue
       }
       if (imgProps.width > 1920 || imgProps.height > 1920) {
-        decImgSvc.deleteAll()
-        console.error("images can't be higher than 1920 pixels vertically or horizontally")
+        alert("images can't be higher than 1920 pixels vertically or horizontally")
+        loading.dec()
         return
       }
       if (!constWidth || !constHeight) {
@@ -40,8 +55,8 @@
         constHeight = imgProps.height
       }
       if (constWidth && (constWidth !== imgProps.width || constHeight !== imgProps.height)) {
-        decImgSvc.deleteAll()
-        console.error("images should have the same width and height")
+        alert("images should have the same width and height")
+        loading.dec()
         return
       }
       const imgArr = await fileToUint8ClampedArray(file)
@@ -68,21 +83,18 @@
         }
       )
     }
+
     if (!$canvasProps.initialized) {
       $canvasProps.sizeX = constWidth
       $canvasProps.sizeY = constHeight
       $canvasProps.initialized = true
     }
+    event.target.value = ''
+    loading.dec()
   }
+  
   const pickHandler = async (key, val) => {
     if ($decryptionInput.stateDecrypting) {
-      // for (let [key1, val1] of $images.entries()) {
-      //   if (val1.picked) {
-      //     val1.picked = false
-      //     $images.set(key1, val1)
-      //     break
-      //   }
-      // }
       val.picked = !val.picked
       $images.set(key, val)
       images.set($images)
@@ -99,13 +111,14 @@
     for (let [key, val] of newMap.entries()) {
       if (!$decryptionInput.stateDecrypting && val.picked) {
         newMap.delete(key)
+        decImgSvc.removeDecImageByHash(key)
       }
     }
     images.set(newMap)
   }
 </script>
 
-<input class="hidden" type="file" accept='image/*' bind:this={imageInput} on:change={handleFileChange}  multiple />
+<input hidden type="file" accept='image/*' bind:this={imageInput} on:change={handleFileChange}  multiple />
 
 <div class='flex flex-col h-2/3 border-b-2 border-stone-900 bg-blueGray-light'>
   <span class='flex-none pl-2 pointer-events-none text-white'>
@@ -135,8 +148,10 @@
     <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={() => {imageInput.click()}}>
       <span class='text-white text-sm'>Add</span>
     </button>
-    <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={() => {removeHandler()}}>
-      <span class='text-white text-sm'>Remove</span>
-    </button>
+    {#if $canvasProps.initialized}
+      <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={() => {removeHandler()}}>
+        <span class='text-white text-sm'>Remove</span>
+      </button>
+    {/if}
   </div>
 </div>

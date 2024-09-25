@@ -8,14 +8,14 @@
   import encImgSvc from "../../db/encImageService"
   import canvasProps from "../../stores/encrypt/canvas"
   import { fileToUint8ClampedArray } from "../../utils/imageEncryption"
+  import loading from "../../stores/loading";
 
   let imageInput
 
+  $: changeState($results)
 
-  $: changeState($results, $images)
-  $: encImgSvc.deleteAllExceptByHash(Array.from($images.keys()))
-
-  const changeState = (res, imgs) => {
+  const changeState = (res) => {
+    let imgs = $images
     for (let [key, val] of imgs.entries()) {
       val.state = defaultState
       imgs.set(key, val)
@@ -31,6 +31,7 @@
   }
 
   const handleFileChange = async (event) => {
+    loading.inc()
     const files = event.target.files
     const previewOptions = {
       maxSizeMB: 0.1,
@@ -42,7 +43,6 @@
       maxWidthOrHeight: 1920,
       useWebWorker: true
     }
-    
     for (let file of files) {
       let imgProps = await getImageProps(file)
       if ($images.has(imgProps.hash)) {
@@ -71,7 +71,6 @@
         .catch(function (error) {
           console.error(error.message)
         }
-        
       )
       let imageProps = {
         base64: arrayBuf,
@@ -92,6 +91,8 @@
       $canvasProps.sizeY = maxWidthAndHeight.maxHeight
       $canvasProps.initialized = true
     }
+    event.target.value = ''
+    loading.dec()
   }
 
   const pickHandler = async (key, val) => {
@@ -119,6 +120,7 @@
     for (let [key, val] of newMap.entries()) {
       if (!$encryptionInput.stateEncrypting && val.picked) {
         newMap.delete(key)
+        encImgSvc.removeEncImageByHash(key)
       }
     }
     images.set(newMap)
@@ -126,7 +128,7 @@
 
 </script>
 
-<input class="hidden" type="file" accept='image/*' bind:this={imageInput} on:change={handleFileChange}  multiple />
+<input hidden multiple type="file" accept='image/*' bind:this={imageInput} on:change={handleFileChange} />
 
 <div class='flex flex-1 flex-col h-1/3 border-y-2 border-stone-900 bg-blueGray-light'>
   <span class='flex-none pl-2 pointer-events-none text-white'>
@@ -138,7 +140,7 @@
         <div class='ml-2 grid grid-cols-4 place-content-start gap-2'>
           {#each $images as [key, val] (key)}
             <div role="cell" tabindex="0" class="flex justify-center max-w-20 max-h-32 my-1" on:click={() => {pickHandler(key, val)}} on:keypress={() => {pickHandler(key, val)}}>
-              <div class="bg-blueGray-light hover:cursor-pointer border {$encryptionInput.stateEncrypting && val.picked ? 'border-cyan-300' : val.state === usedState ? 'border-green-600' : val.picked ? 'border-gray-300' : 'border-gray-600'} ">
+              <div class="bg-blueGray-light hover:cursor-pointer border {$encryptionInput.stateEncrypting && val.picked ? 'border-cyan-300' : val.state === usedState ? 'border-cyan-600' : val.picked ? 'border-gray-300' : 'border-gray-600'} ">
                 <div class='min-h-16 min-w-20 grid place-content-center'>
                   <img class='max-h-16 max-w-16 m-auto' alt={val.filename} id={`img-${val.hash}`} src={val.base64}/>
                 </div>
@@ -156,8 +158,11 @@
     <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={() => {imageInput.click()}}>
       <span class='text-white text-sm'>Add</span>
     </button>
-    <button class=' mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={() => {removeHandler()}}>
-      <span class='text-white text-sm'>Remove</span>
-    </button>
+    {#if $canvasProps.initialized}
+      <button class=' mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={() => {removeHandler()}}>
+        <span class='text-white text-sm'>Remove</span>
+      </button>
+    {/if}
+    
   </div>
 </div>

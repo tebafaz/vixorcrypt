@@ -34,14 +34,22 @@ export const getMaxWidthAndHeight = (imageProps) => {
   return {maxWidth, maxHeight}
 }
 
-export const uint8arrToImage = (uint8arr, width, height) => {
+export const uint8arrToImage = async (uint8arr, width, height) => {
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
   const ctx = canvas.getContext('2d')
   const imageData = new ImageData(uint8arr, width, height)
   ctx.putImageData(imageData, 0, 0)
-  const img = new Image()
-  img.src = canvas.toDataURL()
+  const img = await loadImage(canvas.toDataURL())
   return img
+}
+
+export const loadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`))
+    img.src = src
+  });
 }

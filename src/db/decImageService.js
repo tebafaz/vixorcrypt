@@ -7,10 +7,8 @@ class DecImageService {
 
   async insertDecImage(hash, uint8Arr) {
     try {
-      // const blob = new Blob([file], { type: file.type })
-      // await this.db.DecImgs.add({ hash, image: blob })
       await this.db.decImgs.add({ hash, image: uint8Arr })
-      console.log('DecImg with hash added:', hash)
+      // console.log('DecImg with hash added:', hash)
     } catch (error) {
       console.error('Failed to add DecImg:', error)
     }
@@ -27,12 +25,7 @@ class DecImageService {
 
   async updateDecImageByHash(hash, newImageData) {
     try {
-      const success = await this.db.decImgs.update(hash, { image: newImageData })
-      if (success) {
-        console.log('DecImg updated successfully.')
-      } else {
-        console.warn('No record found with the provided hash.')
-      }
+      await this.db.decImgs.update(hash, { image: newImageData })
     } catch (error) {
       console.error('Failed to update DecImg:', error)
     }
@@ -41,6 +34,7 @@ class DecImageService {
   async removeDecImageByHash(hash) {
     try {
       await this.db.decImgs.delete(hash)
+      // console.log('Deleted DecImg:', hash)
     } catch (error) {
       console.error('Failed to remove DecImg:', error)
     }
@@ -57,7 +51,7 @@ class DecImageService {
   async deleteAll() {
     try {
       await this.db.decImgs.clear()
-      console.log('Deleted all DecImgs')
+      // console.log('Deleted all DecImgs')
     } catch (error) {
       console.error('Error during deletion:', error)
     }
@@ -68,7 +62,7 @@ class DecImageService {
       const allHashes = await this.db.decImgs.toCollection().primaryKeys()
       const hashesToDelete = allHashes.filter(hash => !hashes.includes(hash))
       await this.db.decImgs.bulkDelete(hashesToDelete)
-      console.log(`Deleted all DecImgs except: ${hashes.join(', ')}`)
+      // console.log(`Deleted all DecImgs except: ${hashes.join(', ')}`)
     } catch (error) {
       console.error('Error during deletion:', error)
     }

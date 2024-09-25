@@ -5,7 +5,11 @@
   import encrypt from "../../stores/mode"
   import results from "../../stores/encrypt/results"
   import { sha224 } from "js-sha256"
-  import { chosenState } from "../../constants/shareState"
+  import canvasProps from "../../stores/encrypt/canvas"
+  import encImgSvc from "../../db/encImageService"
+  import imageCompression from "browser-image-compression"
+  import encResSvc from "../../db/encResultService";
+  import loading from "../../stores/loading";
   
   $: shareCreationLogic($shares, $images)
   
@@ -13,7 +17,6 @@
     if (!$encryptionInput.stateEncrypting) {
       return
     }
-    // starting value of canCreate false, so that returning from function wil result in rejection
     $encryptionInput.canCreate = false
     let imgPicked = false
     for (let [_, val] of imgs.entries()) {
@@ -22,65 +25,17 @@
         break
       }
     }
-    // image has to be picked
     if (!imgPicked) {
       return
     }
-    // changeable shares count
     let pickedNum = 0
-    // all picked shares
-    let pickedShrs = []
-    // latest share number
-    let latestShr = -1
-    // chosenShares can only count once
-    let chosenOnce = 1
     for (let [key, val] of shrs.entries()) {
       if (val.picked) {
-        if (val.state !== chosenState) {
-          pickedNum++
-        } else {
-          pickedNum += chosenOnce
-          chosenOnce = 0
-        }
-        pickedShrs.push(key)
-        latestShr = key
+        pickedNum++
       }
     }
-    // check for number of changeable shares
     if (pickedNum < 2) {
       return
-    }
-    // check for latest share to not be chosen
-    if ($shares.has(latestShr) && $shares.get(latestShr).state === chosenState) {
-      return
-    }
-
-    // check each results' share combination
-    for (let [_, val] of $results.entries()) {
-      let minLen = Math.min(val.shares.length, pickedShrs.length)
-      // if starting point is different, it will result in different image
-      if (pickedShrs[0] !== val.shares[0]) {
-        break
-      }
-      let similar = true
-      for (let i = 0; i < minLen; i++) {
-        // if shares are not similar, resulting image will be different
-        if (pickedShrs[i] !== val.shares[i]) {
-          similar = false
-          break
-        }
-      }
-      if (similar) {
-        let shareOff = Math.abs(pickedShrs.length - val.shares.length)
-        // shares have to be off by 2 if similar to make up another random image without losing enthropy
-        if (shareOff >= 2) {
-          break
-        } else {
-          return
-        }
-      } else {
-        break
-      }
     }
     
     $encryptionInput.canCreate = true
@@ -121,7 +76,8 @@
     $encryptionInput.stateEncrypting = false
   }
 
-  const createEncResult = () => {
+  const createEncResult = async () => {
+    loading.inc()
     let shrs = []
     let latestShr = -1
     for (let [key, val] of $shares.entries()) {
@@ -132,40 +88,72 @@
     }
 
     let imgHash
+    let imgFileName
     for (let [key, val] of $images.entries()) {
       if (val.picked) {
         imgHash = key
+        imgFileName = val.filename
       }
     }
-    let newRes = {
-      shares: shrs,
-      lastShare: latestShr,
-      imgHash: imgHash,
-      picked: false
+    const previewOptions = {
+      maxSizeMB: 0.1,
+      maxWidthOrHeight: 80,
+      useWebWorker: true
     }
-    let hash = sha224(JSON.stringify(newRes))
-    $results.set(hash, newRes)
-    results.set($results)
-    unpickAllEnc()
-    $encryptionInput.canCreate = false
-    $encryptionInput.stateEncrypting = false
+    const row = await encImgSvc.getEncImageByHash('current')
+    const canvas = document.createElement('canvas')
+    canvas.width = $canvasProps.sizeX
+    canvas.height = $canvasProps.sizeY
+    const ctx = canvas.getContext('2d')
+    const imageData = new ImageData(row.image, $canvasProps.sizeX, $canvasProps.sizeY)
+    ctx.putImageData(imageData, 0, 0)
+    const file = await imageCompression.canvasToFile(canvas)
+    await imageCompression(file, previewOptions)
+      .then(async function (compressedFile) {
+        let arrayBuf = await imageCompression.getDataUrlFromFile(compressedFile)
+
+        let newRes = {
+          shares: shrs,
+          imgHash: imgHash,
+          lastShare: latestShr,
+          base64: arrayBuf,
+          filename: imgFileName,
+          picked: false
+        }
+        let hash = sha224(JSON.stringify(newRes))
+        await encResSvc.insertEncResult(hash, row.image)
+
+        $encryptionInput.canCreate = false
+        $encryptionInput.stateEncrypting = false
+        
+        $results.set(hash, newRes)
+        results.set($results)
+        unpickAllEnc()
+
+      })
+      .catch(function (error) {
+        console.error(error.message)
+      })
+      loading.dec()
   }
 </script>
 
-{#if $encryptionInput.stateEncrypting}
-  {#if $encryptionInput.canCreate}
-    <button class='absolute left-0 bottom-0 h-8 w-8 bg-cyan-500 hover:bg-cyan-300' on:click={createEncResult}>
-      <span class='text-white'>&#10003;</span>
+{#if $canvasProps.initialized}
+  {#if $encryptionInput.stateEncrypting}
+    {#if $encryptionInput.canCreate}
+      <button class='absolute left-0 bottom-0 h-8 w-8 bg-cyan-500 hover:bg-cyan-300' on:click={createEncResult}>
+        <span class='text-white'>&#10003;</span>
+      </button>
+    {/if}
+    {#if !$encryptionInput.canCreate}
+      <button class='absolute left-0 bottom-0 h-8 w-8 bg-red-500 hover:bg-red-800' on:click={changeStateNotEncrypting}>
+        <span class='text-white'>&#10005;</span>
+      </button>
+    {/if}
+  {/if}
+  {#if !$encryptionInput.stateEncrypting}  
+    <button class='absolute left-0 bottom-0 h-8 w-8 bg-emerald-800 hover:bg-emerald-900' on:click={changeStateEncrypting}>
+      <span class='text-white'>&#11208;</span>
     </button>
   {/if}
-  {#if !$encryptionInput.canCreate}
-    <button class='absolute left-0 bottom-0 h-8 w-8 bg-red-500 hover:bg-red-800' on:click={changeStateNotEncrypting}>
-      <span class='text-white'>&#10005;</span>
-    </button>
-  {/if}
-{/if}
-{#if !$encryptionInput.stateEncrypting}  
-  <button class='absolute left-0 bottom-0 h-8 w-8 bg-emerald-800 hover:bg-emerald-900' on:click={changeStateEncrypting}>
-    <span class='text-white'>&#11208;</span>
-  </button>
 {/if}

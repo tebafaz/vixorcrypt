@@ -14,33 +14,26 @@
   import { deleteDatabase } from "./db/dexie"
   import modal from "./stores/modals"
   import { createCanvasModal, createSharesModal } from "./constants/modals"
-  
-
 
   window.addEventListener('beforeunload', async () => {
     await deleteDatabase()
   })
 
-
 </script>
 
+{#if $modal === createSharesModal}
+  <CreateShares />
+{/if}
+{#if $modal === createCanvasModal}
+  <CreateCanvas />
+{/if}
 
-<!-- <Modals /> -->
-<CreateCanvas />
-<CreateShares />
-
-
-<input multiple type='file' hidden accept='image/*' id='image-input'/>
   <div class='w-full h-screen flex flex-col'>
     <Menubar />
-    <!-- start workspace -->
     <div class=' flex-1 min-h-0'>
       <div class='w-full h-full flex flex-row flex-1 min-h-0'>
-        <!-- start main canvas panel -->
         <Workspace />
-        <!-- end main canvas panel -->
-        <!-- start layers panel -->
-        <div class='flex flex-col w-96 min-h-full h-full bg-stone-300'>
+        <div class='flex flex-col w-96 min-h-full h-full bg-stone-300 select-none'>
           <ModeBar />
           <div class='flex-auto'>
             {#if $encrypt}
@@ -53,11 +46,7 @@
               <DecResults />
             {/if}
           </div>
-            
-  
         </div>
-        <!-- end layers panel -->
       </div>
     </div>
-    <!-- end workspace -->
   </div>

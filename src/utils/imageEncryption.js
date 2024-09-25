@@ -31,8 +31,7 @@ export const xorPixels = (imageData1, imageData2) => {
   return imageData
 }
 
-export const createRawBlobFromArray = (pixelArray) => {
-  const canvasData = get(canvasProps)
+export const createRawBlobFromArray = (pixelArray, canvasData) => {
   let canvas = document.createElement("canvas")
   canvas.width = canvasData.sizeX
   canvas.height = canvasData.sizeY

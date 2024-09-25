@@ -5,16 +5,21 @@
   import encrypt from "../stores/mode"
   import results from "../stores/encrypt/results"
   import { sha224 } from "js-sha256"
-  import { chosenState } from "../constants/shareState"
   import decryptionInput from "../stores/decrypt/decryption"
   import StartEncryption from "./encryption/StartEncryption.svelte";
   import StartDecryption from "./decryption/StartDecryption.svelte";
 
   const changeModeEncrypt = () => {
+    if ($encryptionInput.stateEncrypting || $decryptionInput.stateDecrypting) {
+      return
+    }
     $encrypt = true
   }
 
   const changeModeDecrypt = () => {
+    if ($encryptionInput.stateEncrypting || $decryptionInput.stateDecrypting) {
+      return
+    }
     $encrypt = false
   }
 

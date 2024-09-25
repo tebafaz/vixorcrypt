@@ -64,7 +64,7 @@ export const initKonva = (wrapper, canvasProps) => {
       ctx.rect(0, 0, canvasProps.sizeX, canvasProps.sizeY);
     },
   })
-
+  
   const border = new Konva.Rect({
     x: 0,
     y: 0,
@@ -73,6 +73,7 @@ export const initKonva = (wrapper, canvasProps) => {
     stroke: 'white',
     strokeWidth: 2,
     listening: false,
+    fill: 'black',
     name: 'border'
   })
   group.add(border)

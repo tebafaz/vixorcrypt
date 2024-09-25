@@ -1,35 +1,27 @@
 <script>
   import shares from "../../stores/encrypt/shares"
-  import { shareState, defaultState, usedState, chosenState } from "../../constants/shareState"
+  import { shareState, defaultState, usedState } from "../../constants/shareState"
   import encryptionInput from "../../stores/encrypt/encryption"
   import modal from "../../stores/modals"
   import { createSharesModal } from "../../constants/modals"
   import results from "../../stores/encrypt/results"
+  import canvasProps from "../../stores/encrypt/canvas";
 
   $: changeState($results, $shares)
 
   const changeState = (res, shrs) => {
-    let lastShrs = []
     for (let [key, val] of shrs.entries()) {
       val.state = defaultState
       shrs.set(key, val)
     }
     for (let [_, val] of res.entries()) {
-      let len = val.shares.length
-      
+      const len = val.shares.length
+
       for (let i = 0; i < len; i++) {
-        if (i === len - 1) {
-          lastShrs.push(val.shares[i])
-        }
         let val1 = shrs.get(val.shares[i])
         val1.state = usedState
         shrs.set(val.shares[i], val1)
       }
-    }
-    for (const shr of lastShrs) {
-      let val1 = shrs.get(shr)
-      val1.state = chosenState
-      shrs.set(shr, val1)
     }
     shares.set(shrs)
   }
@@ -40,20 +32,18 @@
 
   const pickHandler = (key, val) => {
     let valProps = shareState.get(val.state)
-    if ($encryptionInput.stateEncrypting === true) {
+    if ($encryptionInput.stateEncrypting === true && val.reusable) {
       let newMap = new Map($shares)
       let val = $shares.get(key)
       val.picked = !val.picked
       newMap.set(key, val)
       shares.set(newMap)
-    } else {
-      if (valProps.removable) {
-        let newMap = new Map($shares)
-        let val = $shares.get(key)
-        val.picked = !val.picked
-        newMap.set(key, val)
-        shares.set(newMap)
-      }
+    } else if (valProps.removable) {
+      let newMap = new Map($shares)
+      let val = $shares.get(key)
+      val.picked = !val.picked
+      newMap.set(key, val)
+      shares.set(newMap)
     }
   }
 
@@ -83,7 +73,7 @@
         <div class='ml-1 grid grid-cols-10 place-content-start gap-1'>
           <!-- images -->
           {#each $shares as [key, val] (key) }
-            <div role="cell" tabindex="0" class="my-1 text-center hover:cursor-pointer bg-blueGray-light text-white border {$encryptionInput.stateEncrypting && val.picked ? 'border-cyan-300' : val.state === chosenState ? 'border-orange-600' : val.state === usedState ? 'border-cyan-600' : !$encryptionInput.stateEncrypting && val.picked ? 'border-gray-300' : 'border-gray-600'}" on:click={() => {pickHandler(key, val)}} on:keypress={() => {pickHandler(key, val)}}>
+            <div role="cell" tabindex="0" class="my-1 text-center hover:cursor-pointer bg-blueGray-light text-white border {$encryptionInput.stateEncrypting && val.picked ? 'border-cyan-300' : val.state === usedState ? 'border-cyan-600' : !$encryptionInput.stateEncrypting && val.picked ? 'border-gray-300' : 'border-gray-600'}" on:click={() => {pickHandler(key, val)}} on:keypress={() => {pickHandler(key, val)}}>
               {key}
             </div>
           {/each}
@@ -93,11 +83,13 @@
     <!-- end inner overflow item -->
   </div>
   <div class='flex h-7 items-center'>
-    <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={openCreateShares}>
-      <span class='text-white text-sm'>Fill</span>
-    </button>
-    <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={removeHandler}>
-      <span class='text-white text-sm'>Remove</span>
-    </button>
+    {#if $canvasProps.initialized}
+      <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={openCreateShares}>
+        <span class='text-white text-sm'>Fill</span>
+      </button>
+      <button class='mx-1 bg-blueGray-light hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark px-2' on:click={removeHandler}>
+        <span class='text-white text-sm'>Remove</span>
+      </button>
+    {/if}
   </div>
 </div>

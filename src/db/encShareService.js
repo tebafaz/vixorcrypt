@@ -8,7 +8,7 @@ class ShareService {
   async insertShare(num, uint8Arr) {
     try {
       await this.db.shares.add({ num, uint8Arr })
-      console.log('share with num added:', num)
+      // console.log('share with num added:', num)
     } catch (error) {
       console.error('Failed to add share:', error)
     }

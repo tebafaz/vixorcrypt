@@ -2,10 +2,24 @@
 <script>
   import { onMount } from "svelte"
   import encrypt from "../stores/mode"
-  import { encryptionMenuBarItems, decryptionMenuBarItems } from "../constants/menubar"
+  import { encInitMenuBarItems, encMenuBarItems, decInitMenuBarItems, decMenuBarItems, disabledMenuBarItems } from "../constants/menubar"
+  import encCanvasProps from "../stores/encrypt/canvas"
+  import decCanvasProps from "../stores/decrypt/canvas";
+  import encryptionInput from "../stores/encrypt/encryption";
+  import decryptionInput from "../stores/decrypt/decryption";
 
   let menuItems
-  $: $encrypt ? menuItems = encryptionMenuBarItems : menuItems = decryptionMenuBarItems
+  $: if (($encrypt && $encryptionInput.stateEncrypting) || (!$encrypt && $decryptionInput.stateDecrypting)) {
+    menuItems = disabledMenuBarItems
+  } else if ($encrypt && $encCanvasProps.initialized) {
+    menuItems = encInitMenuBarItems
+  } else if ($encrypt && !$encCanvasProps.initialized) {
+    menuItems = encMenuBarItems
+  } else if (!$encrypt && $decCanvasProps.initialized) {
+    menuItems = decInitMenuBarItems
+  } else if (!$encrypt && !$decCanvasProps.initialized) {
+    menuItems = decMenuBarItems
+  }
 
   let open = false
   let activeMenuIndex = -1
@@ -75,7 +89,7 @@
 
 </script>
 
-<div class="w-full h-6 bg-blueGray-light">
+<div class="w-full h-6 bg-blueGray-light select-none">
   <div role="menubar" tabindex="0" class="menu-container inline-flex select-none m-auto p-0">
     {#each menuItems as menuItem, index1}
       <div role="menuitem" tabindex="0" class="m-0 {activeMenuIndex === index1 ? 'bg-blueGray-medium-light' : ''}" on:click={() => {toggleOpen(); toggleMenu(index1)}} on:keypress={() => {toggleOpen(); toggleMenu(index1)}} on:mouseenter={() =>{toggleMenu(index1)}}>

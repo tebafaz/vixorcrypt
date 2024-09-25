@@ -9,6 +9,7 @@
   const maxShares = 1000
   let modalDiv
   let sharesValue = minShares
+  
   const clickOutside = async (event) => {
     if (!modalDiv.contains(event.target)) {
       $modal = closeModal
@@ -18,6 +19,8 @@
     if (minShares <= sharesValue && sharesValue <= maxShares) {
       createShares($shares, sharesValue) 
       $modal = closeModal
+    } else {
+      alert('shares are not in allowed range')
     }
   }
 
@@ -40,32 +43,20 @@
     shares.set(tempShares)
   }
 
-  $: clickOutsideListener($modal)
-
-  const clickOutsideListener = async (mod) => {
-    if (mod === createSharesModal) {
-      // await tick()
-      // document.addEventListener('click', clickOutside)
-      setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
-    } else {
+  onMount(() => {
+    
+    setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
+    return () => {
       document.removeEventListener('click', clickOutside)
     }
-  }
-
-  // onMount(() => {
-    
-  //   setTimeout(() => {document.addEventListener('click', clickOutside)}, 1)
-  //   return () => {
-  //     document.removeEventListener('click', clickOutside)
-  //   }
-  // })
+  })
 
 </script>
 
-<div class='{$modal === createSharesModal ? '' : 'hidden'} fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black modal' id='create-canvas-modal'>
+<div class='fixed z-10 left-0 top-0 w-full h-full overflow-auto bg-opacity-40 bg-black modal' id='create-canvas-modal'>
   <div bind:this={modalDiv} class='absolute bg-blueGray-light inset-0 m-auto p-8 w-96 h-40 text-center' on:loadstart={() => {document.addEventListener('click', clickOutside)}}>
     <span class='text-white'>Write the number of shares</span>
-    <input bind:value={sharesValue} type="number" max={ maxShares } min={ minShares } pattern={'d'} class='invalid:bg-red-500 m-2' id='layer-count' /><br />
+    <input bind:value={sharesValue} type="number" max={ maxShares } min={ minShares } pattern={'d'} class='invalid:bg-red-400 m-2' id='layer-count' /><br />
     <span class='text-xs text-red-400'>min={ minShares } max={ maxShares }</span><br />
     <button class='hover:bg-blueGray-medium-light active:bg-blueGray-medium-dark p-1 text-white' on:click={enterHandler}>Enter</button>
   </div>

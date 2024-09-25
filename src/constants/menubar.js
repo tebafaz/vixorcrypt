@@ -1,39 +1,95 @@
-import { createCanvasHandler, decExportAsHandler, editCanvasSizeHandler, encExportAsHandler, openDocsHandler, openGithubPage, removeCanvasHandler } from "../handlers/menubar"
+import { createCanvasHandler, decExportAsHandler, editCanvasSizeHandler, encExportAsHandler, openDocsHandler, openGithubPage, removeCanvasHandler, decRemoveCanvasHandler } from "../handlers/menubar"
 
-export const encryptionMenuBarItems = [
+const general = {
+  text: "About",
+  subMenuItems: [
+    { text: "Help",
+      subMenuItems: [
+        { text: "Docs", handler: openDocsHandler },
+      ]
+    },
+    { text: "Github page", handler: openGithubPage },
+  ]
+}
+
+export const encMenuBarItems = [
   {
     text: "File",
     subMenuItems: [
-      { text: "Create canvas", handler: createCanvasHandler},
-      { text: "Remove canvas", handler: removeCanvasHandler },
+      { text: "Create project", handler: createCanvasHandler },
+      { text: "Clear project", disabled: true },
+      { text: "Export as", disabled: true },
+    ]
+  },
+  {
+    text: "Edit",
+    subMenuItems: [
+      { text: "Canvas size", disabled: true },
+    ]
+  },
+  general
+]
+
+export const disabledMenuBarItems = [
+  {
+    text: "File",
+    subMenuItems: [
+      { text: "Create project", disabled: true },
+      { text: "Clear project", disabled: true },
+      { text: "Export as", disabled: true },
+    ]
+  },
+  {
+    text: "Edit",
+    subMenuItems: [
+      { text: "Canvas size", disabled: true },
+    ]
+  },
+  general
+]
+
+export const encInitMenuBarItems = [
+  {
+    text: "File",
+    subMenuItems: [
+      { text: "Create project", disabled: true },
+      { text: "Clear project", handler: removeCanvasHandler },
       { text: "Export as", handler: encExportAsHandler },
     ]
   },
   {
     text: "Edit",
     subMenuItems: [
-      { text: "Canvas size", handler: editCanvasSizeHandler},
+      { text: "Canvas size", handler: editCanvasSizeHandler },
     ]
   },
-  {
-    text: "About",
-    subMenuItems: [
-      { text: "Help",
-        subMenuItems: [
-          { text: "Docs", handler: openDocsHandler },
-        ]
-      },
-      { text: "Github page", handler: openGithubPage },
-    ]
-  }
+  general
 ]
 
-export const decryptionMenuBarItems = [
+export const decMenuBarItems = [
   {
     text: "File",
     subMenuItems: [
-      { text: "Create canvas", disabled: true },
-      { text: "Remove canvas", disabled: true },
+      { text: "Create project", disabled: true },
+      { text: "Clear project", disabled: true },
+      { text: "Export as", disabled: true },
+    ]
+  },
+  {
+    text: "Edit",
+    subMenuItems: [
+      { text: "Canvas size", disabled: true },
+    ]
+  },
+  general
+]
+
+export const decInitMenuBarItems = [
+  {
+    text: "File",
+    subMenuItems: [
+      { text: "Create project", disabled: true },
+      { text: "Clear project", handler: decRemoveCanvasHandler },
       { text: "Export as", handler: decExportAsHandler },
     ]
   },
@@ -43,15 +99,5 @@ export const decryptionMenuBarItems = [
       { text: "Canvas size", disabled: true },
     ]
   },
-  {
-    text: "About",
-    subMenuItems: [
-      { text: "Help",
-        subMenuItems: [
-          { text: "Docs", handler: openDocsHandler },
-        ]
-      },
-      { text: "Github page", handler: openGithubPage },
-    ]
-  }
+  general
 ]

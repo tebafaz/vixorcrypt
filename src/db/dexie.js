@@ -11,7 +11,9 @@ const openDatabase = (dbName) => {
   db.version(1).stores({
     encImgs: 'hash',
     shares: 'num',
-    decImgs: 'hash'
+    decImgs: 'hash',
+    encRes: 'key',
+    decRes: 'key'
   })
   return db
 }
