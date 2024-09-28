@@ -2,7 +2,7 @@
 Vixorcrypt is a xor based visual cryptography implementation. Under the hood it uses bitwise xor operations on each pixel's RGBA channel. All logic was made for pure client side computations. Nothing will be sent to server for any kind of computation or storage.
 
 ### For users
-This is the place where all coding of this project happens. Website hosting this site located **here**. And manual is **here**. Any bugs that may arise while using this project can be written **here**. Also you can request new features **here**.
+This is the place where all coding of this project happens. Website hosting this site located [here](https://vixorcrypt.tebafaz.com). And manual is [here](#manual). Any bugs that may arise while using this project can be written [here](https://github.com/tebafaz/vixorcrypt/issues).
 
 ### For developers
 Feel free to fork this project and add pull requests!

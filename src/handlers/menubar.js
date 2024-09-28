@@ -127,7 +127,7 @@ export const decExportAsHandler = async () => {
 }
 
 export const openDocsHandler = () => {
-
+  window.open("https://github.com/tebafaz/vixorcrypt?tab=readme-ov-file#vixorcrypt", "_blank")
 }
 
 export const decRemoveCanvasHandler = () => {
