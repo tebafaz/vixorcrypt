@@ -10,6 +10,6 @@ RUN npm install -g http-server
 COPY . .
 RUN npm run build
 
-EXPOSE 10001
+EXPOSE 10002
 
-CMD ["http-server", "./dist", "-p", "10001"]
+CMD ["http-server", "./dist", "-p", "10002"]
