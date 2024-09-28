@@ -1,6 +1,3 @@
-import { get } from "svelte/store"
-import canvasProps from "../stores/encrypt/canvas"
-
 export const getRandomizedPixelArray = (width, height) => {
   const imageData = new Uint8ClampedArray(width * height * 4)
   const chunkSize = 65536

@@ -25,7 +25,7 @@ class EncResultService {
 
   async updateEncResultByHash(hash, newResultData) {
     try {
-      const success = await this.db.encRes.update(hash, { image: newResultData })
+      await this.db.encRes.update(hash, { image: newResultData })
     } catch (error) {
       console.error('Failed to update EncRes:', error)
     }
@@ -36,14 +36,6 @@ class EncResultService {
       await this.db.encRes.delete(hash)
     } catch (error) {
       console.error('Failed to remove EncRes:', error)
-    }
-  }
-  async existsEncResultByHash(hash) {
-    try {
-      const count = await this.db.encRes.equals(hash).count()
-      return count > 0
-    } catch (error) {
-      console.error('Failed to exist EncRes:', error)
     }
   }
 

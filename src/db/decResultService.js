@@ -25,7 +25,7 @@ class DecResultService {
 
   async updateDecResultByHash(hash, newResultData) {
     try {
-      const success = await this.db.decRes.update(hash, { image: newResultData })
+      await this.db.decRes.update(hash, { image: newResultData })
     } catch (error) {
       console.error('Failed to update DecRes:', error)
     }

@@ -54,7 +54,7 @@ class EncImageService {
 
   async updateEncImageByHash(hash, newImageData) {
     try {
-      const success = await this.db.encImgs.update(hash, { image: newImageData })
+      await this.db.encImgs.update(hash, { image: newImageData })
     } catch (error) {
       console.error('Failed to update EncImg:', error)
     }
