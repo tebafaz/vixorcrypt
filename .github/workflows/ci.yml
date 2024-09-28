@@ -11,5 +11,4 @@ jobs:
       run: |
         npm install eslint@9.11.1
         npx eslint . \
-          --config .eslint.config.js \
-          --ext .js
+          --config eslint.config.js
