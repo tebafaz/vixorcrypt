@@ -122,7 +122,7 @@
 
 <div class='flex flex-col h-2/3 border-b-2 border-stone-900 bg-blueGray-light'>
   <span class='flex-none pl-2 pointer-events-none text-white'>
-    Images
+    Shares
   </span>
   <div class='flex-auto'>
     <div class="relative w-full h-full bg-blueGray-medium-light">

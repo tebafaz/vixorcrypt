@@ -5,7 +5,7 @@
   import EncShares from "./components/encryption/Shares.svelte"
   import EncImages from "./components/encryption/Images.svelte"
   import EncResults from "./components/encryption/Results.svelte"
-  import DecImages from "./components/decryption/Images.svelte"
+  import DecShares from "./components/decryption/Shares.svelte"
   import DecResults from "./components/decryption/Results.svelte"
   import encrypt from "./stores/mode"
   import CreateCanvas from "./components/modals/CreateCanvas.svelte"
@@ -42,7 +42,7 @@
               <EncResults />
             {/if}
             {#if !$encrypt}
-              <DecImages />
+              <DecShares />
               <DecResults />
             {/if}
           </div>
