@@ -43,6 +43,6 @@ jobs:
             docker pull ghcr.io/${{ github.repository }}:${{ github.sha }}
             docker stop vixorcypt
             docker rm vixorcypt
-            docker run --name vixorcypt -p ${{ secrets.DOCKER_PORT }}:5173 \
+            docker run --name vixorcypt -p ${{ secrets.DOCKER_PORT }}:10001 \
               --network custom-bridge \
               --restart always -d ghcr.io/${{ github.repository }}:${{ github.sha }}
