@@ -32,6 +32,8 @@ export const handleEncKonvaImage = async (group, imgs) => {
         const groupClone = group.clone()
         groupClone.scaleX(1)
         groupClone.scaleY(1)
+        groupClone.x(0)
+        groupClone.y(0)
 
         const border = groupClone.findOne('.border')
         border.strokeEnabled(false)
@@ -49,6 +51,8 @@ export const handleEncKonvaImage = async (group, imgs) => {
         offscreenLayer.draw()
         
         const canvas = groupClone.toCanvas({
+          x: 0,
+          y: 0,
           imageSmoothingEnabled: false,
           width: canvasProp.sizeX,
           height: canvasProp.sizeY
@@ -83,6 +87,8 @@ export const handleEncKonvaImage = async (group, imgs) => {
           const groupClone = group.clone()
           groupClone.scaleX(1)
           groupClone.scaleY(1)
+          groupClone.x(0)
+          groupClone.y(0)
 
           const border = groupClone.findOne('.border')
           border.strokeEnabled(false)
@@ -99,6 +105,8 @@ export const handleEncKonvaImage = async (group, imgs) => {
           offscreenLayer.draw()
           
           const canvas = groupClone.toCanvas({
+            x: 0,
+            y: 0,
             imageSmoothingEnabled: false,
             width: canvasProp.sizeX,
             height: canvasProp.sizeY
