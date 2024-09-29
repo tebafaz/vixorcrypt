@@ -15,18 +15,45 @@
   import modal from "./stores/modals"
   import { createCanvasModal, createSharesModal } from "./constants/modals"
 
-  window.addEventListener('beforeunload', async () => {
+  $: smallScreenSize = width < minWidth || height < minheight
+
+  window.addEventListener('beforeunload', async (event) => {
     await deleteDatabase()
+  })
+
+  const minWidth = 850
+  const minheight = 450
+
+  let smallScreenSize = false
+  let width = window.innerWidth
+  let height = window.innerHeight
+
+  const updateSize = () => {
+    width = window.innerWidth
+    height = window.innerHeight
+  }
+
+  onMount(() => {
+    window.addEventListener('resize', updateSize)
+    return () => {
+      window.removeEventListener('resize', updateSize)
+    }
   })
 
 </script>
 
-{#if $modal === createSharesModal}
-  <CreateShares />
+{#if smallScreenSize}
+  <div class='w-screen h-screen flex flex-col justify-center items-center bg-blueGray-medium-light'>
+    <span class=" text-4xl text-white">Screen size is too small.<br />Recommended to use on PC's</span>
+  </div>
 {/if}
-{#if $modal === createCanvasModal}
-  <CreateCanvas />
-{/if}
+{#if !smallScreenSize}
+  {#if $modal === createSharesModal}
+    <CreateShares />
+  {/if}
+  {#if $modal === createCanvasModal}
+    <CreateCanvas />
+  {/if}
 
   <div class='w-full h-screen flex flex-col'>
     <Menubar />
@@ -50,3 +77,4 @@
       </div>
     </div>
   </div>
+{/if}

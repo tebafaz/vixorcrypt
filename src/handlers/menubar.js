@@ -22,6 +22,11 @@ export const createCanvasHandler = () => {
 }
 
 export const editCanvasSizeHandler = () => {
+  const res = get(encResults)
+  if (res.size !== 0) {
+    alert('before editing canvas size delete remove all results')
+    return
+  }
   modal.set(createCanvasModal)
 }
 
